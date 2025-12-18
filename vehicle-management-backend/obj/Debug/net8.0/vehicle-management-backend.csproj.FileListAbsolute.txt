@@ -1,0 +1,9 @@
+C:\Users\VIVEK\OneDrive\Desktop\VehicalManagement\vehicle-management-backend\vehicle-management-backend\obj\Debug\net8.0\vehicle-management-backend.csproj.AssemblyReference.cache
+C:\Users\VIVEK\OneDrive\Desktop\VehicalManagement\vehicle-management-backend\vehicle-management-backend\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\VIVEK\OneDrive\Desktop\VehicalManagement\vehicle-management-backend\vehicle-management-backend\obj\Debug\net8.0\vehicle-management-backend.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\VIVEK\OneDrive\Desktop\VehicalManagement\vehicle-management-backend\vehicle-management-backend\obj\Debug\net8.0\vehicle-management-backend.AssemblyInfoInputs.cache
+C:\Users\VIVEK\OneDrive\Desktop\VehicalManagement\vehicle-management-backend\vehicle-management-backend\obj\Debug\net8.0\vehicle-management-backend.AssemblyInfo.cs
+C:\Users\VIVEK\OneDrive\Desktop\VehicalManagement\vehicle-management-backend\vehicle-management-backend\obj\Debug\net8.0\vehicle-management-backend.csproj.CoreCompileInputs.cache
+C:\Users\VIVEK\OneDrive\Desktop\VehicalManagement\vehicle-management-backend\vehicle-management-backend\obj\Debug\net8.0\vehicle-management-backend.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\VIVEK\OneDrive\Desktop\VehicalManagement\vehicle-management-backend\vehicle-management-backend\obj\Debug\net8.0\vehicle-management-backend.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\VIVEK\OneDrive\Desktop\VehicalManagement\vehicle-management-backend\vehicle-management-backend\obj\Debug\net8.0\vehicle-management-backend.sourcelink.json

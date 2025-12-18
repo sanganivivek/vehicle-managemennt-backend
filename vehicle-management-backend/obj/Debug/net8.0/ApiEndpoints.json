@@ -1,0 +1,139 @@
+[
+  {
+    "ContainingType": "BrandController",
+    "Method": "GetBrands",
+    "RelativePath": "api/brands",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BrandController",
+    "Method": "CreateBrand",
+    "RelativePath": "api/brands",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "vehicle_management_backend.DTO.CreateBrandDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ModelController",
+    "Method": "CreateModel",
+    "RelativePath": "api/models",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "vehicle_management_backend.DTO.CreateModelDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ModelController",
+    "Method": "GetModels",
+    "RelativePath": "api/models/{brandId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "brandId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "vehicle_management_backend.Controllers.VehicleController",
+    "Method": "GetAll",
+    "RelativePath": "api/Vehicle",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "vehicle_management_backend.Controllers.VehicleController",
+    "Method": "Create",
+    "RelativePath": "api/Vehicle",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "vehicle_management_backend.DTO.CreateVehicleDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "vehicle_management_backend.Controllers.VehicleController",
+    "Method": "Get",
+    "RelativePath": "api/Vehicle/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "vehicle_management_backend.Controllers.VehicleController",
+    "Method": "Update",
+    "RelativePath": "api/Vehicle/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "vehicle_management_backend.DTO.CreateVehicleDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "vehicle_management_backend.Controllers.VehicleController",
+    "Method": "Delete",
+    "RelativePath": "api/Vehicle/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
