@@ -1,10 +1,10 @@
-using vehicle_management_backend.Core.DTOs;
+using vehicle_management_backend.Core.Models;
 
 namespace vehicle_management_backend.Application.Services.Interfaces
 {
     public interface IModelService
     {
-        Task CreateAsync(CreateModelDTO dto);
-        Task<List<ModelDTO>> GetModelsByBrandAsync(Guid brandId);
+        Task<List<Model>> GetModelsByBrandAsync(int brandId);
+        Task CreateAsync(Model model);
     }
 }

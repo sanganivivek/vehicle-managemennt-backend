@@ -1,10 +1,13 @@
-using vehicle_management_backend.Core.DTOs;
+using vehicle_management_backend.Core.Models;
 
-public interface IVehicleService
+namespace vehicle_management_backend.Application.Services.Interfaces
 {
-    Task<List<VehicleDTO>> GetAllAsync();
-    Task<VehicleDTO?> GetByIdAsync(Guid id);
-    Task CreateAsync(CreateVehicleDTO dto);
-    Task UpdateAsync(Guid id, UpdateVehicleDTO dto);
-    Task DeleteAsync(Guid id);
+    public interface IVehicleService
+    {
+        Task<List<VehicleMaster>> GetAllAsync();
+        Task<VehicleMaster?> GetByIdAsync(int id);
+        Task CreateAsync(VehicleMaster vehicle);
+        Task UpdateAsync(VehicleMaster vehicle);
+        Task DeleteAsync(int id);
+    }
 }

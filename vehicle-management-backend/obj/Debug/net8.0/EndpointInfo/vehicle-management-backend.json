@@ -1,41 +1,30 @@
 {
   "openapi": "3.0.4",
   "info": {
-    "title": "Vehicle Management API",
-    "description": "API for managing vehicle data.",
-    "version": "v1"
+    "title": "vehicle-management-backend",
+    "version": "1.0"
   },
   "paths": {
     "/api/brands": {
-      "get": {
-        "tags": [
-          "Brand"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
       "post": {
         "tags": [
-          "Brand"
+          "BrandControllers"
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateBrandDTO"
+                "$ref": "#/components/schemas/BrandDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateBrandDTO"
+                "$ref": "#/components/schemas/BrandDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateBrandDTO"
+                "$ref": "#/components/schemas/BrandDTO"
               }
             }
           }
@@ -45,9 +34,19 @@
             "description": "OK"
           }
         }
+      },
+      "get": {
+        "tags": [
+          "BrandControllers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
-    "/api/models/{brandId}": {
+    "/api/models/by-brand/{brandId}": {
       "get": {
         "tags": [
           "Model"
@@ -79,17 +78,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateModelDTO"
+                "$ref": "#/components/schemas/Model"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateModelDTO"
+                "$ref": "#/components/schemas/Model"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateModelDTO"
+                "$ref": "#/components/schemas/Model"
               }
             }
           }
@@ -101,7 +100,7 @@
         }
       }
     },
-    "/api/Vehicle": {
+    "/api/vehicles": {
       "get": {
         "tags": [
           "Vehicle"
@@ -120,17 +119,46 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateVehicleDTO"
+                "$ref": "#/components/schemas/VehicleMaster"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateVehicleDTO"
+                "$ref": "#/components/schemas/VehicleMaster"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateVehicleDTO"
+                "$ref": "#/components/schemas/VehicleMaster"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Vehicle"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VehicleMaster"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VehicleMaster"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/VehicleMaster"
               }
             }
           }
@@ -142,7 +170,7 @@
         }
       }
     },
-    "/api/Vehicle/{id}": {
+    "/api/vehicles/{id}": {
       "get": {
         "tags": [
           "Vehicle"
@@ -153,51 +181,11 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Vehicle"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateVehicleDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateVehicleDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateVehicleDTO"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -214,8 +202,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -229,67 +217,76 @@
   },
   "components": {
     "schemas": {
-      "CreateBrandDTO": {
-        "required": [
-          "name"
-        ],
+      "Brand": {
         "type": "object",
         "properties": {
-          "name": {
-            "minLength": 1,
-            "type": "string"
+          "brandId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "brandName": {
+            "type": "string",
+            "nullable": true
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Model"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "CreateModelDTO": {
-        "required": [
-          "brandId",
-          "name"
-        ],
+      "BrandDTO": {
         "type": "object",
         "properties": {
-          "name": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "brandId": {
-            "type": "integer",
-            "format": "int32"
+          "brandName": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "CreateVehicleDTO": {
-        "required": [
-          "brandId",
-          "modelId",
-          "modelYear",
-          "regNo"
-        ],
+      "Model": {
         "type": "object",
         "properties": {
-          "regNo": {
-            "maxLength": 20,
-            "minLength": 1,
-            "type": "string"
+          "modelId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "modelName": {
+            "type": "string",
+            "nullable": true
           },
           "brandId": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "format": "uuid"
+          },
+          "brand": {
+            "$ref": "#/components/schemas/Brand"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VehicleMaster": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "brandId": {
+            "type": "string",
+            "format": "uuid"
           },
           "modelId": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "format": "uuid"
           },
-          "modelYear": {
-            "maximum": 2100,
-            "minimum": 1990,
-            "type": "integer",
-            "format": "int32"
-          },
-          "isActive": {
-            "type": "boolean"
+          "vehicleName": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

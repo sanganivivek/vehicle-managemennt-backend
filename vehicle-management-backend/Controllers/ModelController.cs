@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using vehicle_management_backend.Application.Services.Interfaces;
-using vehicle_management_backend.Core.DTOs;
+using vehicle_management_backend.Core.Models;
 
 namespace vehicle_management_backend.Controllers
 {
@@ -15,19 +15,16 @@ namespace vehicle_management_backend.Controllers
             _modelService = modelService;
         }
 
-        // GET: api/models/{brandId}
-        [HttpGet("{brandId}")]
-        public async Task<IActionResult> GetByBrand(Guid brandId)
+        [HttpGet("by-brand/{brandId}")]
+        public async Task<IActionResult> GetByBrand(int brandId)
         {
-            var result = await _modelService.GetModelsByBrandAsync(brandId);
-            return Ok(result);
+            return Ok(await _modelService.GetModelsByBrandAsync(brandId));
         }
 
-        // POST: api/models
         [HttpPost]
-        public async Task<IActionResult> Create(CreateModelDTO dto)
+        public async Task<IActionResult> Create(Model model)
         {
-            await _modelService.CreateAsync(dto);
+            await _modelService.CreateAsync(model);
             return Ok();
         }
     }

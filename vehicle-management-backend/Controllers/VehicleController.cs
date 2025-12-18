@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using vehicle_management_backend.Application.Services.Interfaces;
-using vehicle_management_backend.Core.DTOs;
+using vehicle_management_backend.Core.Models;
 
 namespace vehicle_management_backend.Controllers
 {
@@ -22,29 +22,27 @@ namespace vehicle_management_backend.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = await _vehicleService.GetByIdAsync(id);
-            if (result == null) return NotFound();
-            return Ok(result);
+            return Ok(await _vehicleService.GetByIdAsync(id));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateVehicleDTO dto)
+        public async Task<IActionResult> Create(VehicleMaster vehicle)
         {
-            await _vehicleService.CreateAsync(dto);
+            await _vehicleService.CreateAsync(vehicle);
             return Ok();
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, UpdateVehicleDTO dto)
+        [HttpPut]
+        public async Task<IActionResult> Update(VehicleMaster vehicle)
         {
-            await _vehicleService.UpdateAsync(id, dto);
+            await _vehicleService.UpdateAsync(vehicle);
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(int id)
         {
             await _vehicleService.DeleteAsync(id);
             return Ok();
