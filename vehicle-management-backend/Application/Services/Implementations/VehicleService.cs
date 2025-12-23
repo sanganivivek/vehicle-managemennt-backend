@@ -13,9 +13,9 @@ namespace vehicle_management_backend.Application.Services.Implementations
             _vehicleRepository = vehicleRepository;
         }
 
-        public async Task<List<VehicleMaster>> GetAllAsync()
+        public async Task<IList<VehicleMaster>> GetAllAsync(VehicleListRequest request)
         {
-            return await _vehicleRepository.GetAllAsync();
+            return await _vehicleRepository.GetAllAsync(request);
         }
 
         public async Task<VehicleMaster?> GetByIdAsync(int id)

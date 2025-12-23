@@ -19,7 +19,8 @@ namespace vehicle_management_backend.Application.Services.Implementations
             var brand = new Brand
             {
                 BrandId = Guid.NewGuid(),
-                BrandName = dto.BrandName
+                BrandName = dto.BrandName,
+                Models = new List<Model>() // Fix: Set required Models property
             };
 
             await _brandRepository.AddAsync(brand);

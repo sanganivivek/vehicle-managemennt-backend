@@ -16,13 +16,13 @@ namespace vehicle_management_backend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery]VehicleListRequest request)
         {
-            return Ok(await _vehicleService.GetAllAsync());
+            return Ok(await _vehicleService.GetAllAsync(request));
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById([FromRoute]int id)
         {
             return Ok(await _vehicleService.GetByIdAsync(id));
         }

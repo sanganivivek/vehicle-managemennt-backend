@@ -4,7 +4,7 @@ namespace vehicle_management_backend.Infrastructure.Repositories.Interfaces
 {
     public interface IVehicleRepository
     {
-        Task<List<VehicleMaster>> GetAllAsync();
+        Task<List<VehicleMaster>> GetAllAsync(VehicleListRequest request);
         Task<VehicleMaster?> GetByIdAsync(int id);
         Task AddAsync(VehicleMaster vehicle);
         Task UpdateAsync(VehicleMaster vehicle);

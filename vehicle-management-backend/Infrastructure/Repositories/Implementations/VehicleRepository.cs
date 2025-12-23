@@ -14,7 +14,7 @@ namespace vehicle_management_backend.Infrastructure.Repositories.Implementations
             _context = context;
         }
 
-        public async Task<List<VehicleMaster>> GetAllAsync()
+        public async Task<List<VehicleMaster>> GetAllAsync(VehicleListRequest request)
         {
             return await _context.Vehicles.ToListAsync();
         }

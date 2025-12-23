@@ -6,6 +6,6 @@ namespace vehicle_management_backend.Core.Models
         public string ModelName { get; set; }
 
         public Guid BrandId { get; set; }
-        public Brand Brand { get; set; }
+        public required Brand Brand { get; set; }
     }
 }

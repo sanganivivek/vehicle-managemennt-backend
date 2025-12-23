@@ -105,6 +105,52 @@
         "tags": [
           "Vehicle"
         ],
+        "parameters": [
+          {
+            "name": "Brand",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SortOrder",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -218,6 +264,9 @@
   "components": {
     "schemas": {
       "Brand": {
+        "required": [
+          "models"
+        ],
         "type": "object",
         "properties": {
           "brandId": {
@@ -249,6 +298,9 @@
         "additionalProperties": false
       },
       "Model": {
+        "required": [
+          "brand"
+        ],
         "type": "object",
         "properties": {
           "modelId": {

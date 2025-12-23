@@ -14,10 +14,10 @@ namespace vehicle_management_backend.Infrastructure.Repositories.Implementations
             _context = context;
         }
 
-        public async Task<List<Model>> GetByBrandIdAsync(int brandId)
+        public async Task<List<Model>> GetByBrandIdAsync(Guid brandId)
         {
             return await _context.Models
-                                 .Where(m => m.BrandId == new Guid(brandId.ToString()))
+                                 .Where(m => m.BrandId == brandId)
                                  .ToListAsync();
         }
 

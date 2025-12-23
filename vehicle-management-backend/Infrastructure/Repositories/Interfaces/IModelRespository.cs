@@ -4,7 +4,7 @@ namespace vehicle_management_backend.Infrastructure.Repositories.Interfaces
 {
     public interface IModelRepository
     {
-        Task<List<Model>> GetByBrandIdAsync(int brandId);
+        Task<List<Model>> GetByBrandIdAsync(Guid brandId); // Changed int to Guid
         Task AddAsync(Model model);
     }
 }

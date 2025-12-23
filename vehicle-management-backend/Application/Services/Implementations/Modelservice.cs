@@ -13,7 +13,7 @@ namespace vehicle_management_backend.Application.Services.Implementations
             _modelRepository = modelRepository;
         }
 
-        public async Task<List<Model>> GetModelsByBrandAsync(int brandId)
+        public async Task<List<Model>> GetModelsByBrandAsync(Guid brandId)
         {
             return await _modelRepository.GetByBrandIdAsync(brandId);
         }
