@@ -34,8 +34,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "model",
-        "Type": "vehicle_management_backend.Core.Models.Model",
+        "Name": "dto",
+        "Type": "vehicle_management_backend.Core.DTOs.CreateModelDTO",
         "IsRequired": true
       }
     ],
@@ -51,7 +51,7 @@
     "Parameters": [
       {
         "Name": "brandId",
-        "Type": "System.Int32",
+        "Type": "System.Guid",
         "IsRequired": true
       }
     ],
