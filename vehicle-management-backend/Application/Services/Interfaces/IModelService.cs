@@ -4,7 +4,7 @@ namespace vehicle_management_backend.Application.Services.Interfaces
 {
     public interface IModelService
     {
-        // CHANGE THIS: Giud -> Guid
+        // CHANGE THIS: int -> Guid
         Task<List<Model>> GetModelsByBrandAsync(Guid brandId);
         Task CreateAsync(Model model);
     }
