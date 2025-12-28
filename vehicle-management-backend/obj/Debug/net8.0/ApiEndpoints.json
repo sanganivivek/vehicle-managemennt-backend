@@ -34,8 +34,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "dto",
-        "Type": "vehicle_management_backend.Core.DTOs.CreateModelDTO",
+        "Name": "model",
+        "Type": "vehicle_management_backend.Core.Models.Model",
         "IsRequired": true
       }
     ],

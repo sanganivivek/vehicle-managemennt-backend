@@ -78,17 +78,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateModelDTO"
+                "$ref": "#/components/schemas/Model"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateModelDTO"
+                "$ref": "#/components/schemas/Model"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateModelDTO"
+                "$ref": "#/components/schemas/Model"
               }
             }
           }
@@ -263,6 +263,30 @@
   },
   "components": {
     "schemas": {
+      "Brand": {
+        "required": [
+          "models"
+        ],
+        "type": "object",
+        "properties": {
+          "brandId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "brandName": {
+            "type": "string",
+            "nullable": true
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Model"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "BrandDTO": {
         "type": "object",
         "properties": {
@@ -273,16 +297,23 @@
         },
         "additionalProperties": false
       },
-      "CreateModelDTO": {
+      "Model": {
         "type": "object",
         "properties": {
-          "name": {
+          "modelId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "modelName": {
             "type": "string",
             "nullable": true
           },
           "brandId": {
             "type": "string",
             "format": "uuid"
+          },
+          "brand": {
+            "$ref": "#/components/schemas/Brand"
           }
         },
         "additionalProperties": false
