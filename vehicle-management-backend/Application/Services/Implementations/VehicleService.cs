@@ -13,12 +13,13 @@ namespace vehicle_management_backend.Application.Services.Implementations
             _vehicleRepository = vehicleRepository;
         }
 
-        public async Task<IList<VehicleMaster>> GetAllAsync(VehicleListRequest request)
+        public async Task<IList<VehicleMaster>> GetAllAsync()
         {
-            return await _vehicleRepository.GetAllAsync(request);
+            return await _vehicleRepository.GetAllAsync();
         }
 
-        public async Task<VehicleMaster?> GetByIdAsync(int id)
+        // Fix: int -> Guid
+        public async Task<VehicleMaster?> GetByIdAsync(Guid id)
         {
             return await _vehicleRepository.GetByIdAsync(id);
         }
@@ -33,7 +34,8 @@ namespace vehicle_management_backend.Application.Services.Implementations
             await _vehicleRepository.UpdateAsync(vehicle);
         }
 
-        public async Task DeleteAsync(int id)
+        // Fix: int -> Guid
+        public async Task DeleteAsync(Guid id)
         {
             await _vehicleRepository.DeleteAsync(id);
         }

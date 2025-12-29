@@ -20,29 +20,34 @@ namespace vehicle_management_backend.Controllers
         public async Task<IActionResult> Create(VehicleDTO dto)
         {
             // Map DTO -> Entity
-            var vehicle = new VehicleMaster // Assuming your entity is VehicleMaster or Vehicle
+            var vehicle = new VehicleMaster
             {
-                VehicleId = Guid.NewGuid(),
-                RegNo = dto.VehicleName, // Mapping Name to RegNo if that's your schema
-                BrandId = dto.BrandId,   // Uses ID only
-                ModelId = dto.ModelId,   // Uses ID only
+                VehicleId = Guid.NewGuid(), // Matches Model now
+                VehicleName = dto.VehicleName, // Matches Model now (was RegNo)
+                BrandId = dto.BrandId,
+                ModelId = dto.ModelId,
                 IsActive = true
             };
 
-            await _vehicleService.AddVehicleAsync(vehicle);
+            // Fix: Call CreateAsync (not AddVehicleAsync)
+            await _vehicleService.CreateAsync(vehicle);
+
+            // Return DTO with the new ID
+            dto.VehicleId = vehicle.VehicleId;
             return Ok(dto);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var vehicles = await _vehicleService.GetAllVehiclesAsync();
+            // Fix: Call GetAllAsync (not GetAllVehiclesAsync)
+            var vehicles = await _vehicleService.GetAllAsync();
 
             // Map Entity -> DTO
             var dtos = vehicles.Select(v => new VehicleDTO
             {
                 VehicleId = v.VehicleId,
-                VehicleName = v.RegNo,
+                VehicleName = v.VehicleName, // Was RegNo
                 BrandId = v.BrandId,
                 ModelId = v.ModelId
             });
