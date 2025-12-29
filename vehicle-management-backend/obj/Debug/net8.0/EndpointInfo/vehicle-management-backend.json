@@ -100,6 +100,30 @@
         }
       }
     },
+    "/api/vehicles/test": {
+      "get": {
+        "tags": [
+          "Vehicle"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/vehicles/simple": {
+      "post": {
+        "tags": [
+          "Vehicle"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/vehicles": {
       "post": {
         "tags": [
@@ -109,17 +133,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/VehicleDTO"
+                "$ref": "#/components/schemas/CreateVehicleWithoutNameDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/VehicleDTO"
+                "$ref": "#/components/schemas/CreateVehicleWithoutNameDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/VehicleDTO"
+                "$ref": "#/components/schemas/CreateVehicleWithoutNameDTO"
               }
             }
           }
@@ -272,6 +296,18 @@
           }
         }
       }
+    },
+    "/api/vehicles/dashboard": {
+      "get": {
+        "tags": [
+          "Vehicle"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -309,6 +345,37 @@
         },
         "additionalProperties": false
       },
+      "CreateVehicleWithoutNameDTO": {
+        "required": [
+          "brandId",
+          "modelId",
+          "regNo"
+        ],
+        "type": "object",
+        "properties": {
+          "regNo": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "brandId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "modelId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "modelYear": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "VehicleDTO": {
         "type": "object",
         "properties": {
@@ -320,6 +387,10 @@
             "type": "string",
             "nullable": true
           },
+          "regNo": {
+            "type": "string",
+            "nullable": true
+          },
           "brandId": {
             "type": "string",
             "format": "uuid"
@@ -327,6 +398,14 @@
           "modelId": {
             "type": "string",
             "format": "uuid"
+          },
+          "modelYear": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

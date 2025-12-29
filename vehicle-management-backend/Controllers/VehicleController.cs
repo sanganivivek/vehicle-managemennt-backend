@@ -16,59 +16,110 @@ namespace vehicle_management_backend.Controllers
             _vehicleService = vehicleService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(CreateVehicleWithoutNameDTO dto)
+        [HttpGet("test")]
+        public IActionResult Test()
         {
-            var vehicle = new VehicleMaster
-            {
-                VehicleId = Guid.NewGuid(),
-                VehicleName = $"Vehicle-{DateTime.Now:yyyyMMddHHmmss}", // Auto-generate name
-                RegNo = dto.RegNo,
-                BrandId = dto.BrandId,
-                ModelId = dto.ModelId,
-                ModelYear = dto.ModelYear,
-                IsActive = dto.IsActive
-            };
+            return Ok(new { message = "API is working", timestamp = DateTime.Now });
+        }
 
-            await _vehicleService.CreateAsync(vehicle);
-            return Ok(new { vehicleId = vehicle.VehicleId, message = "Vehicle saved successfully" });
+        [HttpPost("simple")]
+        public IActionResult CreateSimple()
+        {
+            return Ok(new { message = "Simple endpoint works" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateVehicleWithoutNameDTO dto)
+        {
+            try
+            {
+                if (dto == null)
+                {
+                    return BadRequest("Request body is null");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var vehicle = new VehicleMaster
+                {
+                    VehicleId = Guid.NewGuid(),
+                    VehicleName = $"Vehicle-{DateTime.Now:yyyyMMddHHmmss}",
+                    RegNo = dto.RegNo ?? string.Empty,
+                    BrandId = dto.BrandId,
+                    ModelId = dto.ModelId,
+                    ModelYear = dto.ModelYear,
+                    IsActive = dto.IsActive
+                };
+
+                await _vehicleService.CreateAsync(vehicle);
+                return Ok(new { vehicleId = vehicle.VehicleId, message = "Vehicle saved successfully" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, new { error = ex.Message, innerException = ex.InnerException?.Message });
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] string? search, [FromQuery] string? brand, 
             [FromQuery] string? sortBy, [FromQuery] string? sortOrder, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var vehicles = await _vehicleService.GetAllAsync();
-            
-            // Apply filtering
-            if (!string.IsNullOrEmpty(search))
-                vehicles = vehicles.Where(v => v.VehicleName.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
-
-            var totalCount = vehicles.Count();
-            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-            
-            // Apply pagination
-            vehicles = vehicles.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
-            var dtos = vehicles.Select(v => new VehicleDTO
+            try
             {
-                VehicleId = v.VehicleId,
-                VehicleName = v.VehicleName,
-                RegNo = v.RegNo,
-                BrandId = v.BrandId,
-                ModelId = v.ModelId,
-                ModelYear = v.ModelYear,
-                IsActive = v.IsActive
-            });
+                var vehicles = await _vehicleService.GetAllAsync();
+                
+                // Handle null or empty vehicles list
+                if (vehicles == null)
+                {
+                    vehicles = new List<VehicleMaster>();
+                }
+                
+                // Apply filtering
+                if (!string.IsNullOrEmpty(search))
+                    vehicles = vehicles.Where(v => v.VehicleName.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
 
-            return Ok(new {
-                totalCount,
-                page,
-                data = dtos,
-                totalPages,
-                totalRecords = totalCount,
-                pageSize
-            });
+                var totalCount = vehicles.Count();
+                var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+                
+                // Apply pagination
+                vehicles = vehicles.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+                var dtos = vehicles.Select(v => new VehicleDTO
+                {
+                    VehicleId = v.VehicleId,
+                    VehicleName = v.VehicleName,
+                    RegNo = v.RegNo,
+                    BrandId = v.BrandId,
+                    ModelId = v.ModelId,
+                    ModelYear = v.ModelYear,
+                    IsActive = v.IsActive
+                }).ToList();
+
+                return Ok(new {
+                    totalCount,
+                    page,
+                    data = dtos,
+                    totalPages,
+                    totalRecords = totalCount,
+                    pageSize
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetAll: {ex.Message}");
+                return Ok(new {
+                    totalCount = 0,
+                    page = 1,
+                    data = new List<VehicleDTO>(),
+                    totalPages = 1,
+                    totalRecords = 0,
+                    pageSize = 10
+                });
+            }
         }
 
         [HttpGet("{id}")]

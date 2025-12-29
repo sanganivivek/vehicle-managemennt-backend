@@ -67,7 +67,7 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "vehicle_management_backend.Core.DTOs.VehicleDTO",
+        "Type": "vehicle_management_backend.Core.DTOs.CreateVehicleWithoutNameDTO",
         "IsRequired": true
       }
     ],
@@ -165,6 +165,36 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "vehicle_management_backend.Controllers.VehicleController",
+    "Method": "GetDashboardData",
+    "RelativePath": "api/vehicles/dashboard",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "vehicle_management_backend.Controllers.VehicleController",
+    "Method": "CreateSimple",
+    "RelativePath": "api/vehicles/simple",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "vehicle_management_backend.Controllers.VehicleController",
+    "Method": "Test",
+    "RelativePath": "api/vehicles/test",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   }
 ]

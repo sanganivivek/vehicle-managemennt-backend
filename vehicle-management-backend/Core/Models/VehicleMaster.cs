@@ -10,8 +10,8 @@ namespace vehicle_management_backend.Core.Models
         public Guid BrandId { get; set; }
         public Guid ModelId { get; set; }
 
-        public string VehicleName { get; set; }
-        public string RegNo { get; set; }
+        public string VehicleName { get; set; } = string.Empty;
+        public string RegNo { get; set; } = string.Empty;
         public int? ModelYear { get; set; }
         public bool IsActive { get; set; }
     }

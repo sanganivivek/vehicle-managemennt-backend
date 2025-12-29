@@ -5,7 +5,7 @@ namespace vehicle_management_backend.Core.DTOs
     public class CreateVehicleWithoutNameDTO
     {
         [Required]
-        public string RegNo { get; set; }
+        public string RegNo { get; set; } = string.Empty;
         
         [Required]
         public Guid BrandId { get; set; }
