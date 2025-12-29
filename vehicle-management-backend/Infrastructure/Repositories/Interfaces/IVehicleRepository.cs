@@ -4,17 +4,17 @@ namespace vehicle_management_backend.Infrastructure.Repositories.Interfaces
 {
     public interface IVehicleRepository
     {
-        // 1. Remove 'VehicleListRequest' parameter
+        // Fix 1: Remove 'VehicleListRequest' to match Controller call
         Task<List<VehicleMaster>> GetAllAsync();
 
-        // 2. Change int -> Guid
+        // Fix 2: Change int -> Guid
         Task<VehicleMaster?> GetByIdAsync(Guid id);
 
         Task AddAsync(VehicleMaster vehicle);
 
         Task UpdateAsync(VehicleMaster vehicle);
 
-        // 3. Change int -> Guid (Crucial Fix)
+        // Fix 3: Change int -> Guid
         Task DeleteAsync(Guid id);
     }
 }
