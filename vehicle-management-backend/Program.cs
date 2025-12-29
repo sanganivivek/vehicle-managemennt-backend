@@ -15,14 +15,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Existing Services
-builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+builder.Services.AddScoped<IVehicleRespository, VehicleRepository>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 
-builder.Services.AddScoped<IBrandRepository, BrandRepository>();
+builder.Services.AddScoped<IBrandRespository, BrandRepository>();
 builder.Services.AddScoped<IBrandService, BrandService>();
 
 // New Model Services (The Fix)
-builder.Services.AddScoped<IModelRepository, ModelRepository>();
+builder.Services.AddScoped<IModelRespository, ModelRepository>();
 builder.Services.AddScoped<IModelService, ModelService>();
 
 // ==========================================

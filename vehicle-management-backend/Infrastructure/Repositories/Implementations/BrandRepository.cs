@@ -5,7 +5,7 @@ using vehicle_management_backend.Infrastructure.Repositories.Interfaces;
 
 namespace vehicle_management_backend.Infrastructure.Repositories.Implementations
 {
-    public class BrandRepository : IBrandRepository
+    public class BrandRepository : IBrandRespository
     {
         private readonly AppDbContext _context;
 

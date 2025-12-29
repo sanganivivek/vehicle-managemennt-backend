@@ -7,9 +7,9 @@ namespace vehicle_management_backend.Application.Services.Implementations
 {
     public class BrandService : IBrandService
     {
-        private readonly IBrandRepository _brandRepository;
+        private readonly IBrandRespository _brandRepository;
 
-        public BrandService(IBrandRepository brandRepository)
+        public BrandService(IBrandRespository brandRepository)
         {
             _brandRepository = brandRepository;
         }

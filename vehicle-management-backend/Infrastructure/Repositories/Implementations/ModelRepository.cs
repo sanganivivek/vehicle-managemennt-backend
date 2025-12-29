@@ -5,7 +5,7 @@ using vehicle_management_backend.Infrastructure.Repositories.Interfaces;
 
 namespace vehicle_management_backend.Infrastructure.Repositories.Implementations
 {
-    public class ModelRepository : IModelRepository
+    public class ModelRepository : IModelRespository
     {
         private readonly AppDbContext _context;
 

@@ -6,9 +6,9 @@ namespace vehicle_management_backend.Application.Services.Implementations
 {
     public class VehicleService : IVehicleService
     {
-        private readonly IVehicleRepository _vehicleRepository;
+        private readonly IVehicleRespository _vehicleRepository;
 
-        public VehicleService(IVehicleRepository vehicleRepository)
+        public VehicleService(IVehicleRespository vehicleRepository)
         {
             _vehicleRepository = vehicleRepository;
         }

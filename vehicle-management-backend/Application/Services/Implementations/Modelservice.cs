@@ -6,9 +6,9 @@ namespace vehicle_management_backend.Application.Services.Implementations
 {
     public class ModelService : IModelService
     {
-        private readonly IModelRepository _modelRepository;
+        private readonly IModelRespository _modelRepository;
 
-        public ModelService(IModelRepository modelRepository)
+        public ModelService(IModelRespository modelRepository)
         {
             _modelRepository = modelRepository;
         }
