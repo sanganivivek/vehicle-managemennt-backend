@@ -78,17 +78,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Model"
+                "$ref": "#/components/schemas/ModelDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Model"
+                "$ref": "#/components/schemas/ModelDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Model"
+                "$ref": "#/components/schemas/ModelDTO"
               }
             }
           }
@@ -101,62 +101,6 @@
       }
     },
     "/api/vehicles": {
-      "get": {
-        "tags": [
-          "Vehicle"
-        ],
-        "parameters": [
-          {
-            "name": "Brand",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Search",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "SortBy",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "SortOrder",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "PageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
       "post": {
         "tags": [
           "Vehicle"
@@ -165,17 +109,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/VehicleMaster"
+                "$ref": "#/components/schemas/VehicleDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/VehicleMaster"
+                "$ref": "#/components/schemas/VehicleDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/VehicleMaster"
+                "$ref": "#/components/schemas/VehicleDTO"
               }
             }
           }
@@ -186,29 +130,58 @@
           }
         }
       },
-      "put": {
+      "get": {
         "tags": [
           "Vehicle"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VehicleMaster"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VehicleMaster"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/VehicleMaster"
-              }
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "brand",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -227,11 +200,51 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Vehicle"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VehicleDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VehicleDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/VehicleDTO"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -248,8 +261,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -263,10 +276,7 @@
   },
   "components": {
     "schemas": {
-      "Brand": {
-        "required": [
-          "models"
-        ],
+      "BrandDTO": {
         "type": "object",
         "properties": {
           "brandId": {
@@ -276,28 +286,11 @@
           "brandName": {
             "type": "string",
             "nullable": true
-          },
-          "models": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Model"
-            },
-            "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "BrandDTO": {
-        "type": "object",
-        "properties": {
-          "brandName": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "Model": {
+      "ModelDTO": {
         "type": "object",
         "properties": {
           "modelId": {
@@ -311,19 +304,20 @@
           "brandId": {
             "type": "string",
             "format": "uuid"
-          },
-          "brand": {
-            "$ref": "#/components/schemas/Brand"
           }
         },
         "additionalProperties": false
       },
-      "VehicleMaster": {
+      "VehicleDTO": {
         "type": "object",
         "properties": {
-          "id": {
+          "vehicleId": {
             "type": "string",
             "format": "uuid"
+          },
+          "vehicleName": {
+            "type": "string",
+            "nullable": true
           },
           "brandId": {
             "type": "string",
@@ -332,10 +326,6 @@
           "modelId": {
             "type": "string",
             "format": "uuid"
-          },
-          "vehicleName": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false

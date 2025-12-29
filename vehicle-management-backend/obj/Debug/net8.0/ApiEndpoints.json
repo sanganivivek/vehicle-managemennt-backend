@@ -34,8 +34,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "model",
-        "Type": "vehicle_management_backend.Core.Models.Model",
+        "Name": "dto",
+        "Type": "vehicle_management_backend.Core.DTOs.ModelDTO",
         "IsRequired": true
       }
     ],
@@ -59,47 +59,6 @@
   },
   {
     "ContainingType": "vehicle_management_backend.Controllers.VehicleController",
-    "Method": "GetAll",
-    "RelativePath": "api/vehicles",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "Brand",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Search",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "SortBy",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "SortOrder",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Page",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "PageSize",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "vehicle_management_backend.Controllers.VehicleController",
     "Method": "Create",
     "RelativePath": "api/vehicles",
     "HttpMethod": "POST",
@@ -107,8 +66,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "vehicle",
-        "Type": "vehicle_management_backend.Core.Models.VehicleMaster",
+        "Name": "dto",
+        "Type": "vehicle_management_backend.Core.DTOs.VehicleDTO",
         "IsRequired": true
       }
     ],
@@ -116,16 +75,41 @@
   },
   {
     "ContainingType": "vehicle_management_backend.Controllers.VehicleController",
-    "Method": "Update",
+    "Method": "GetAll",
     "RelativePath": "api/vehicles",
-    "HttpMethod": "PUT",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "vehicle",
-        "Type": "vehicle_management_backend.Core.Models.VehicleMaster",
-        "IsRequired": true
+        "Name": "search",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "brand",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "sortBy",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "sortOrder",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -140,7 +124,28 @@
     "Parameters": [
       {
         "Name": "id",
-        "Type": "System.Int32",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "vehicle_management_backend.Controllers.VehicleController",
+    "Method": "Update",
+    "RelativePath": "api/vehicles/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "vehicle_management_backend.Core.DTOs.VehicleDTO",
         "IsRequired": true
       }
     ],
@@ -156,7 +161,7 @@
     "Parameters": [
       {
         "Name": "id",
-        "Type": "System.Int32",
+        "Type": "System.Guid",
         "IsRequired": true
       }
     ],

@@ -1,17 +1,41 @@
-// ... imports
-
 using vehicle_management_backend.Application.Services.Interfaces;
 using vehicle_management_backend.Core.Models;
+using vehicle_management_backend.Infrastructure.Repositories.Interfaces;
 
-public class VehicleService : IVehicleService
+namespace vehicle_management_backend.Application.Services.Implementations
 {
-    // ... constructor ...
-
-    // FIX: Remove 'VehicleListRequest' parameter and arguments
-    public async Task<IList<VehicleMaster>> GetAllAsync()
+    public class VehicleService : IVehicleService
     {
-        return await _vehicleRepository.GetAllAsync(); // No arguments here anymore
-    }
+        private readonly IVehicleRepository _vehicleRepository;
 
-    // ... keep other methods ...
+        public VehicleService(IVehicleRepository vehicleRepository)
+        {
+            _vehicleRepository = vehicleRepository;
+        }
+
+        public async Task<IList<VehicleMaster>> GetAllAsync()
+        {
+            return await _vehicleRepository.GetAllAsync();
+        }
+
+        public async Task<VehicleMaster?> GetByIdAsync(Guid id)
+        {
+            return await _vehicleRepository.GetByIdAsync(id);
+        }
+
+        public async Task CreateAsync(VehicleMaster vehicle)
+        {
+            await _vehicleRepository.AddAsync(vehicle);
+        }
+
+        public async Task UpdateAsync(VehicleMaster vehicle)
+        {
+            await _vehicleRepository.UpdateAsync(vehicle);
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            await _vehicleRepository.DeleteAsync(id);
+        }
+    }
 }
