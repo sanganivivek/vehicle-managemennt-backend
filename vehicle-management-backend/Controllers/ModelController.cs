@@ -34,15 +34,27 @@ namespace vehicle_management_backend.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateModelDTO dto)
         {
-            var model = new Model
+            try
             {
-                ModelId = Guid.NewGuid(),
-                BrandId = dto.BrandId,
-                ModelName = dto.Name
-            };
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            await _modelService.CreateAsync(model);
-            return Ok(model);
+                var model = new Model
+                {
+                    ModelId = Guid.NewGuid(),
+                    BrandId = dto.BrandId,
+                    ModelName = dto.Name
+                };
+
+                await _modelService.CreateAsync(model);
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message, innerException = ex.InnerException?.Message });
+            }
         }
     }
 }

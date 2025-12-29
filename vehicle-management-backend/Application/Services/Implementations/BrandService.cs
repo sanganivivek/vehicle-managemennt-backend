@@ -31,6 +31,7 @@ namespace vehicle_management_backend.Application.Services.Implementations
             var brands = await _brandRepository.GetAllAsync();
             return brands.Select(b => new BrandDTO
             {
+                BrandId = b.BrandId,
                 BrandName = b.BrandName
             }).ToList();
         }
