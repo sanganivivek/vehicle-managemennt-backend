@@ -31,19 +31,18 @@ namespace vehicle_management_backend.Controllers
             return Ok(dtos);
         }
 
-        // POST: Accepts clean DTO
         [HttpPost]
-        public async Task<IActionResult> Create(ModelDTO dto)
+        public async Task<IActionResult> Create(CreateModelDTO dto)
         {
             var model = new Model
             {
-                ModelName = dto.ModelName,
-                BrandId = dto.BrandId
+                ModelId = Guid.NewGuid(),
+                BrandId = dto.BrandId,
+                ModelName = dto.Name
             };
 
             await _modelService.CreateAsync(model);
-            dto.ModelId = model.ModelId;
-            return Ok(dto);
+            return Ok(model);
         }
     }
 }
