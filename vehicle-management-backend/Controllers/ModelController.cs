@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using vehicle_management_backend.Application.Services.Interfaces;
+using vehicle_management_backend.Core.DTOs;
 using vehicle_management_backend.Core.Models;
 
 namespace vehicle_management_backend.Controllers
@@ -15,18 +16,40 @@ namespace vehicle_management_backend.Controllers
             _modelService = modelService;
         }
 
-        // CHANGE THIS: int -> Guid
+        // GET: Returns clean DTOs (No nested loops)
         [HttpGet("by-brand/{brandId}")]
         public async Task<IActionResult> GetByBrand(Guid brandId)
         {
-            return Ok(await _modelService.GetModelsByBrandAsync(brandId));
+            var models = await _modelService.GetModelsByBrandAsync(brandId);
+
+            // Map Entity -> DTO
+            var dtos = models.Select(m => new ModelDTO
+            {
+                ModelId = m.ModelId,
+                ModelName = m.ModelName,
+                BrandId = m.BrandId
+            });
+
+            return Ok(dtos);
         }
 
+        // POST: Accepts clean DTO
         [HttpPost]
-        public async Task<IActionResult> Create(Model model)
+        public async Task<IActionResult> Create(ModelDTO dto)
         {
+            // Map DTO -> Entity
+            var model = new Model
+            {
+                ModelId = Guid.NewGuid(),
+                ModelName = dto.ModelName,
+                BrandId = dto.BrandId
+            };
+
             await _modelService.CreateAsync(model);
-            return Ok();
+
+            // Return the DTO back
+            dto.ModelId = model.ModelId;
+            return Ok(dto);
         }
     }
 }

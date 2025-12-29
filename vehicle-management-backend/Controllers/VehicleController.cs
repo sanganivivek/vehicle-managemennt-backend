@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using vehicle_management_backend.Application.Services.Interfaces;
+using vehicle_management_backend.Core.DTOs;
 using vehicle_management_backend.Core.Models;
 
 namespace vehicle_management_backend.Controllers
@@ -15,37 +16,38 @@ namespace vehicle_management_backend.Controllers
             _vehicleService = vehicleService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery]VehicleListRequest request)
-        {
-            return Ok(await _vehicleService.GetAllAsync(request));
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromRoute]int id)
-        {
-            return Ok(await _vehicleService.GetByIdAsync(id));
-        }
-
         [HttpPost]
-        public async Task<IActionResult> Create(VehicleMaster vehicle)
+        public async Task<IActionResult> Create(VehicleDTO dto)
         {
-            await _vehicleService.CreateAsync(vehicle);
-            return Ok();
+            // Map DTO -> Entity
+            var vehicle = new VehicleMaster // Assuming your entity is VehicleMaster or Vehicle
+            {
+                VehicleId = Guid.NewGuid(),
+                RegNo = dto.VehicleName, // Mapping Name to RegNo if that's your schema
+                BrandId = dto.BrandId,   // Uses ID only
+                ModelId = dto.ModelId,   // Uses ID only
+                IsActive = true
+            };
+
+            await _vehicleService.AddVehicleAsync(vehicle);
+            return Ok(dto);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(VehicleMaster vehicle)
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
-            await _vehicleService.UpdateAsync(vehicle);
-            return Ok();
-        }
+            var vehicles = await _vehicleService.GetAllVehiclesAsync();
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            await _vehicleService.DeleteAsync(id);
-            return Ok();
+            // Map Entity -> DTO
+            var dtos = vehicles.Select(v => new VehicleDTO
+            {
+                VehicleId = v.VehicleId,
+                VehicleName = v.RegNo,
+                BrandId = v.BrandId,
+                ModelId = v.ModelId
+            });
+
+            return Ok(dtos);
         }
     }
 }

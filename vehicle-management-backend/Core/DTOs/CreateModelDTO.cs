@@ -1,8 +1,9 @@
 namespace vehicle_management_backend.Core.DTOs
 {
-    public class CreateModelDTO
+    public class ModelDTO
     {
-        public string Name { get; set; }
-        public Guid BrandId { get; set; }
+        public Guid ModelId { get; set; }
+        public string ModelName { get; set; }
+        public Guid BrandId { get; set; } // Foreign Key only! No "Brand" object.
     }
 }
