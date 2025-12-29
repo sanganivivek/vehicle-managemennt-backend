@@ -78,17 +78,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ModelDTO"
+                "$ref": "#/components/schemas/CreateModelDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/ModelDTO"
+                "$ref": "#/components/schemas/CreateModelDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/ModelDTO"
+                "$ref": "#/components/schemas/CreateModelDTO"
               }
             }
           }
@@ -290,20 +290,21 @@
         },
         "additionalProperties": false
       },
-      "ModelDTO": {
+      "CreateModelDTO": {
+        "required": [
+          "brandId",
+          "name"
+        ],
         "type": "object",
         "properties": {
-          "modelId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "modelName": {
-            "type": "string",
-            "nullable": true
-          },
           "brandId": {
             "type": "string",
             "format": "uuid"
+          },
+          "name": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false

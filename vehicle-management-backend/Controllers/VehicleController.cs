@@ -17,20 +17,21 @@ namespace vehicle_management_backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(VehicleDTO dto)
+        public async Task<IActionResult> Create(CreateVehicleWithoutNameDTO dto)
         {
             var vehicle = new VehicleMaster
             {
                 VehicleId = Guid.NewGuid(),
-                VehicleName = dto.VehicleName,
+                VehicleName = $"Vehicle-{DateTime.Now:yyyyMMddHHmmss}", // Auto-generate name
+                RegNo = dto.RegNo,
                 BrandId = dto.BrandId,
                 ModelId = dto.ModelId,
-                IsActive = true
+                ModelYear = dto.ModelYear,
+                IsActive = dto.IsActive
             };
 
             await _vehicleService.CreateAsync(vehicle);
-            dto.VehicleId = vehicle.VehicleId;
-            return Ok(dto);
+            return Ok(new { vehicleId = vehicle.VehicleId, message = "Vehicle saved successfully" });
         }
 
         [HttpGet]
@@ -53,8 +54,11 @@ namespace vehicle_management_backend.Controllers
             {
                 VehicleId = v.VehicleId,
                 VehicleName = v.VehicleName,
+                RegNo = v.RegNo,
                 BrandId = v.BrandId,
-                ModelId = v.ModelId
+                ModelId = v.ModelId,
+                ModelYear = v.ModelYear,
+                IsActive = v.IsActive
             });
 
             return Ok(new {
@@ -77,8 +81,11 @@ namespace vehicle_management_backend.Controllers
             {
                 VehicleId = vehicle.VehicleId,
                 VehicleName = vehicle.VehicleName,
+                RegNo = vehicle.RegNo,
                 BrandId = vehicle.BrandId,
-                ModelId = vehicle.ModelId
+                ModelId = vehicle.ModelId,
+                ModelYear = vehicle.ModelYear,
+                IsActive = vehicle.IsActive
             };
             return Ok(dto);
         }
@@ -105,6 +112,31 @@ namespace vehicle_management_backend.Controllers
 
             await _vehicleService.DeleteAsync(id);
             return NoContent();
+        }
+
+        [HttpGet("dashboard")]
+        public async Task<IActionResult> GetDashboardData()
+        {
+            var vehicles = await _vehicleService.GetAllAsync();
+            
+            var dashboardData = new
+            {
+                totalVehicles = vehicles.Count,
+                activeVehicles = vehicles.Count(v => v.IsActive),
+                recentVehicles = vehicles.OrderByDescending(v => v.VehicleId)
+                    .Take(5)
+                    .Select(v => new {
+                        vehicleId = v.VehicleId,
+                        vehicleName = v.VehicleName,
+                        regNo = v.RegNo,
+                        brandId = v.BrandId,
+                        modelId = v.ModelId,
+                        modelYear = v.ModelYear,
+                        isActive = v.IsActive
+                    })
+            };
+
+            return Ok(dashboardData);
         }
     }
 }
