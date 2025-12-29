@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using vehicle_management_backend.Application.Services.Interfaces;
 using vehicle_management_backend.Core.DTOs;
 using vehicle_management_backend.Core.Models;
@@ -168,8 +169,12 @@ namespace vehicle_management_backend.Controllers
         [HttpGet("dashboard")]
         public async Task<IActionResult> GetDashboardData()
         {
-            var vehicles = await _vehicleService.GetAllAsync();
-            
+            // You must include the navigation properties
+            var vehicles = await _context.Vehicles
+                .Include(v => v.Brand)          // Loads the Brand object
+                .Include(v => v.VehicleModel)   // Loads the Model object
+                .ToListAsync();
+
             var dashboardData = new
             {
                 totalVehicles = vehicles.Count,
