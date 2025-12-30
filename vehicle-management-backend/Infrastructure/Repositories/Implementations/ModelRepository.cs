@@ -14,6 +14,11 @@ namespace vehicle_management_backend.Infrastructure.Repositories.Implementations
             _context = context;
         }
 
+        public async Task<List<Model>> GetAllAsync()
+        {
+            return await _context.Models.ToListAsync();
+        }
+
         public async Task<List<Model>> GetByBrandIdAsync(Guid brandId)
         {
             return await _context.Models

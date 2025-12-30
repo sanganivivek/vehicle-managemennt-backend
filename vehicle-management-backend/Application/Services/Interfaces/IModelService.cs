@@ -1,3 +1,4 @@
+using vehicle_management_backend.Core.DTOs;
 using vehicle_management_backend.Core.Models;
 
 namespace vehicle_management_backend.Application.Services.Interfaces
@@ -6,6 +7,7 @@ namespace vehicle_management_backend.Application.Services.Interfaces
     {
         // CHANGE THIS: int -> Guid
         Task<List<Model>> GetModelsByBrandAsync(Guid brandId);
+        Task<List<ModelDTO>> GetModelsAsync();
         Task CreateAsync(Model model);
     }
 }
