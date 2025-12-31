@@ -224,6 +224,8 @@ namespace vehicle_management_backend.Controllers
             }
         }
 
+        // vehicle-management-backend/Controllers/VehicleController.cs
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, VehicleDTO dto)
         {
@@ -244,15 +246,36 @@ namespace vehicle_management_backend.Controllers
 
                 if (vehicle == null) return NotFound();
 
-                // --- UPDATE ONLY THESE FIELDS ---
+                // Update basic fields
                 vehicle.RegNo = dto.RegNo;
-                vehicle.BrandId = dto.BrandId;
-                vehicle.ModelId = dto.ModelId;
                 vehicle.ModelYear = dto.ModelYear;
                 vehicle.IsActive = dto.IsActive;
 
-                // CRITICAL FIX: DO NOT UPDATE VehicleName
-                // vehicle.VehicleName = dto.VehicleName;  <-- REMOVE THIS LINE
+                // --- FIX STARTS HERE ---
+                // 1. Handle Brand: If ID is empty but Name is provided, look up the ID
+                if (dto.BrandId == Guid.Empty && !string.IsNullOrEmpty(dto.Brand))
+                {
+                    var brands = await _brandService.GetBrandsAsync();
+                    var brandObj = brands.FirstOrDefault(b => b.BrandName.Equals(dto.Brand, StringComparison.OrdinalIgnoreCase));
+                    if (brandObj != null) vehicle.BrandId = brandObj.BrandId;
+                }
+                else
+                {
+                    vehicle.BrandId = dto.BrandId;
+                }
+
+                // 2. Handle Model: If ID is empty but Name is provided, look up the ID
+                if (dto.ModelId == Guid.Empty && !string.IsNullOrEmpty(dto.Model))
+                {
+                    var models = await _modelService.GetModelsAsync();
+                    var modelObj = models.FirstOrDefault(m => m.ModelName.Equals(dto.Model, StringComparison.OrdinalIgnoreCase));
+                    if (modelObj != null) vehicle.ModelId = modelObj.ModelId;
+                }
+                else
+                {
+                    vehicle.ModelId = dto.ModelId;
+                }
+                // --- FIX ENDS HERE ---
 
                 await _vehicleService.UpdateAsync(vehicle);
                 return Ok(dto);
