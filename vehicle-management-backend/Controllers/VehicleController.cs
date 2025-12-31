@@ -231,30 +231,28 @@ namespace vehicle_management_backend.Controllers
             {
                 VehicleMaster? vehicle = null;
 
-                // Try to parse as Guid first
+                // Find the vehicle (by ID or RegNo)
                 if (Guid.TryParse(id, out Guid vehicleId))
                 {
                     vehicle = await _vehicleService.GetByIdAsync(vehicleId);
                 }
                 else
                 {
-                    // If not a Guid, treat as RegNo
                     var vehicles = await _vehicleService.GetAllAsync();
                     vehicle = vehicles.FirstOrDefault(v => v.RegNo == id);
                 }
 
                 if (vehicle == null) return NotFound();
 
-                // --- UPDATE DATA ---
+                // --- UPDATE ONLY THESE FIELDS ---
                 vehicle.RegNo = dto.RegNo;
-                vehicle.ModelYear = dto.ModelYear;
                 vehicle.BrandId = dto.BrandId;
                 vehicle.ModelId = dto.ModelId;
+                vehicle.ModelYear = dto.ModelYear;
                 vehicle.IsActive = dto.IsActive;
 
-                // DELETE THIS LINE BELOW! 
-                // If you keep it, it overwrites the name with NULL because your frontend doesn't send it.
-                // vehicle.VehicleName = dto.VehicleName;  <-- REMOVE THIS
+                // CRITICAL FIX: DO NOT UPDATE VehicleName
+                // vehicle.VehicleName = dto.VehicleName;  <-- REMOVE THIS LINE
 
                 await _vehicleService.UpdateAsync(vehicle);
                 return Ok(dto);
