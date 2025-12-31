@@ -78,14 +78,11 @@ namespace vehicle_management_backend.Controllers
                 var brands = await _brandService.GetBrandsAsync();
                 var models = await _modelService.GetModelsAsync();
 
-               
-               
                 if (vehicles == null)
                 {
                     vehicles = new List<VehicleMaster>();
                 }
 
-               
                 if (!string.IsNullOrEmpty(search))
                     vehicles = vehicles.Where(v => v.VehicleName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
                                                   v.RegNo.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
