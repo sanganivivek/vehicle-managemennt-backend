@@ -78,13 +78,14 @@ namespace vehicle_management_backend.Controllers
                 var brands = await _brandService.GetBrandsAsync();
                 var models = await _modelService.GetModelsAsync();
 
-                // Handle null or empty vehicles list
+               
+               
                 if (vehicles == null)
                 {
                     vehicles = new List<VehicleMaster>();
                 }
 
-                // Apply filtering
+               
                 if (!string.IsNullOrEmpty(search))
                     vehicles = vehicles.Where(v => v.VehicleName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
                                                   v.RegNo.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -96,7 +97,7 @@ namespace vehicle_management_backend.Controllers
                         vehicles = vehicles.Where(v => v.BrandId == brandId.Value).ToList();
                 }
 
-                // Apply sorting
+               
                 if (!string.IsNullOrEmpty(sortBy))
                 {
                     switch (sortBy.ToLower())
@@ -127,7 +128,7 @@ namespace vehicle_management_backend.Controllers
                 var totalCount = vehicles.Count();
                 var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
-                // Apply pagination
+               
                 vehicles = vehicles.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
                 var dtos = vehicles.Select(v => {
@@ -182,14 +183,14 @@ namespace vehicle_management_backend.Controllers
             {
                 VehicleMaster? vehicle = null;
 
-                // Try to parse as Guid first
+                
                 if (Guid.TryParse(id, out Guid vehicleId))
                 {
                     vehicle = await _vehicleService.GetByIdAsync(vehicleId);
                 }
                 else
                 {
-                    // If not a Guid, treat as RegNo
+                    
                     var vehicles = await _vehicleService.GetAllAsync();
                     vehicle = vehicles.FirstOrDefault(v => v.RegNo == id);
                 }
@@ -224,7 +225,7 @@ namespace vehicle_management_backend.Controllers
             }
         }
 
-        // vehicle-management-backend/Controllers/VehicleController.cs
+        
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, VehicleDTO dto)
@@ -233,7 +234,7 @@ namespace vehicle_management_backend.Controllers
             {
                 VehicleMaster? vehicle = null;
 
-                // Find the vehicle (by ID or RegNo)
+              
                 if (Guid.TryParse(id, out Guid vehicleId))
                 {
                     vehicle = await _vehicleService.GetByIdAsync(vehicleId);
@@ -246,13 +247,12 @@ namespace vehicle_management_backend.Controllers
 
                 if (vehicle == null) return NotFound();
 
-                // Update basic fields
+               
                 vehicle.RegNo = dto.RegNo;
                 vehicle.ModelYear = dto.ModelYear;
                 vehicle.IsActive = dto.IsActive;
 
-                // --- FIX STARTS HERE ---
-                // 1. Handle Brand: If ID is empty but Name is provided, look up the ID
+               
                 if (dto.BrandId == Guid.Empty && !string.IsNullOrEmpty(dto.Brand))
                 {
                     var brands = await _brandService.GetBrandsAsync();
@@ -264,7 +264,6 @@ namespace vehicle_management_backend.Controllers
                     vehicle.BrandId = dto.BrandId;
                 }
 
-                // 2. Handle Model: If ID is empty but Name is provided, look up the ID
                 if (dto.ModelId == Guid.Empty && !string.IsNullOrEmpty(dto.Model))
                 {
                     var models = await _modelService.GetModelsAsync();
@@ -275,7 +274,7 @@ namespace vehicle_management_backend.Controllers
                 {
                     vehicle.ModelId = dto.ModelId;
                 }
-                // --- FIX ENDS HERE ---
+               
 
                 await _vehicleService.UpdateAsync(vehicle);
                 return Ok(dto);
@@ -292,7 +291,7 @@ namespace vehicle_management_backend.Controllers
         {
             try
             {
-                // Try to parse as Guid first
+               
                 if (Guid.TryParse(id, out Guid vehicleId))
                 {
                     var vehicle = await _vehicleService.GetByIdAsync(vehicleId);
@@ -303,7 +302,7 @@ namespace vehicle_management_backend.Controllers
                 }
                 else
                 {
-                    // If not a Guid, treat as RegNo
+                    
                     var vehicles = await _vehicleService.GetAllAsync();
                     var vehicle = vehicles.FirstOrDefault(v => v.RegNo == id);
                     if (vehicle == null) return NotFound();
