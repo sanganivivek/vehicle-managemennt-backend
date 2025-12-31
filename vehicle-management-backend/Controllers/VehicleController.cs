@@ -245,12 +245,16 @@ namespace vehicle_management_backend.Controllers
 
                 if (vehicle == null) return NotFound();
 
-                
+                // --- UPDATE DATA ---
                 vehicle.RegNo = dto.RegNo;
                 vehicle.ModelYear = dto.ModelYear;
                 vehicle.BrandId = dto.BrandId;
                 vehicle.ModelId = dto.ModelId;
                 vehicle.IsActive = dto.IsActive;
+
+                // DELETE THIS LINE BELOW! 
+                // If you keep it, it overwrites the name with NULL because your frontend doesn't send it.
+                // vehicle.VehicleName = dto.VehicleName;  <-- REMOVE THIS
 
                 await _vehicleService.UpdateAsync(vehicle);
                 return Ok(dto);
