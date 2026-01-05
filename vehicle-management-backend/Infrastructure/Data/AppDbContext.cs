@@ -18,7 +18,6 @@ namespace vehicle_management_backend.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Remove the HasNoKey() configuration since VehicleMaster has a proper key
             modelBuilder.Entity<VehicleMaster>()
                 .HasKey(v => v.VehicleId);
         }

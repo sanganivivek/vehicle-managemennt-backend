@@ -4,34 +4,25 @@ using vehicle_management_backend.Infrastructure.Data;
 using vehicle_management_backend.Infrastructure.Repositories.Implementations;
 using vehicle_management_backend.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models; // <--- FIX: This was missing for OpenApiInfo
+using Microsoft.OpenApi.Models; 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ==========================================
-// 1. DATABASE & SERVICES
-// ==========================================
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Existing Services
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 
 builder.Services.AddScoped<IBrandRespository, BrandRepository>();
 builder.Services.AddScoped<IBrandService, BrandService>();
 
-// New Model Services (The Fix)
 builder.Services.AddScoped<IModelRespository, ModelRepository>();
 builder.Services.AddScoped<IModelService, ModelService>();
 
-// ==========================================
-// 2. API CONFIGURATION
-// ==========================================
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// CORS Policy (Allow Angular)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp",
@@ -41,7 +32,6 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader());
 });
 
-// Swagger Configuration
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -53,9 +43,6 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// ==========================================
-// 3. HTTP REQUEST PIPELINE
-// ==========================================
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -67,7 +54,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// CORS must be used before Authorization
 app.UseCors("AllowAngularApp");
 
 app.UseAuthorization();
