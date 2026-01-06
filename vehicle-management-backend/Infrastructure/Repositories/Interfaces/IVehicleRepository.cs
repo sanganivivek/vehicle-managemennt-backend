@@ -15,4 +15,3 @@ namespace vehicle_management_backend.Infrastructure.Repositories.Interfaces
         Task DeleteAsync(Guid id);
     }
 }
-}
