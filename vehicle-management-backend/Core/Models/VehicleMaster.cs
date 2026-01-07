@@ -14,5 +14,6 @@ namespace vehicle_management_backend.Core.Models
         public string RegNo { get; set; } = string.Empty;
         public int? ModelYear { get; set; }
         public bool IsActive { get; set; }
+        public int CurrentStatus { get; set; } = 0;
     }
 }
