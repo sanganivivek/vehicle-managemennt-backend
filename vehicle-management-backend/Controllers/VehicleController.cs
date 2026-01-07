@@ -69,7 +69,7 @@ namespace vehicle_management_backend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? search, [FromQuery] string? brand,
+        public async Task<IActionResult> GetAll([FromQuery] string? search, [FromQuery] string? brand, [FromQuery] int? status,
             [FromQuery] string? sortBy, [FromQuery] string? sortOrder, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             try
@@ -81,6 +81,11 @@ namespace vehicle_management_backend.Controllers
                 if (vehicles == null)
                 {
                     vehicles = new List<VehicleMaster>();
+                }
+
+                if (status.HasValue)
+                {
+                    vehicles = vehicles.Where(v => v.CurrentStatus == status.Value).ToList();
                 }
 
                 if (!string.IsNullOrEmpty(search))
@@ -256,6 +261,7 @@ namespace vehicle_management_backend.Controllers
                 vehicle.IsActive = dto.IsActive;
                 vehicle.BrandId = dto.BrandId;
                 vehicle.ModelId = dto.ModelId;
+                vehicle.CurrentStatus = dto.CurrentStatus; 
 
                 await _vehicleService.UpdateAsync(vehicle);
                 Console.WriteLine($"Vehicle updated successfully: {vehicle.VehicleId}");
