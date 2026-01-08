@@ -260,17 +260,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/VehicleDTO"
+                "$ref": "#/components/schemas/UpdateVehicleDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/VehicleDTO"
+                "$ref": "#/components/schemas/UpdateVehicleDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/VehicleDTO"
+                "$ref": "#/components/schemas/UpdateVehicleDTO"
               }
             }
           }
@@ -377,21 +377,17 @@
           },
           "isActive": {
             "type": "boolean"
+          },
+          "currentStatus": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
       },
-      "VehicleDTO": {
+      "UpdateVehicleDTO": {
         "type": "object",
         "properties": {
-          "vehicleId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "vehicleName": {
-            "type": "string",
-            "nullable": true
-          },
           "regNo": {
             "type": "string",
             "nullable": true
@@ -403,22 +399,6 @@
           "modelId": {
             "type": "string",
             "format": "uuid"
-          },
-          "brand": {
-            "type": "string",
-            "nullable": true
-          },
-          "model": {
-            "type": "string",
-            "nullable": true
-          },
-          "brandName": {
-            "type": "string",
-            "nullable": true
-          },
-          "modelName": {
-            "type": "string",
-            "nullable": true
           },
           "modelYear": {
             "type": "integer",

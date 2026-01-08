@@ -55,7 +55,8 @@ namespace vehicle_management_backend.Controllers
                     BrandId = dto.BrandId,
                     ModelId = dto.ModelId,
                     ModelYear = dto.ModelYear,
-                    IsActive = dto.IsActive
+                    IsActive = dto.IsActive,
+                    CurrentStatus = dto.CurrentStatus
                 };
 
                 await _vehicleService.CreateAsync(vehicle);
@@ -150,7 +151,8 @@ namespace vehicle_management_backend.Controllers
                         BrandName = vehicleBrand?.BrandName ?? "Unknown",
                         ModelName = vehicleModel?.ModelName ?? "Unknown",
                         ModelYear = v.ModelYear,
-                        IsActive = v.IsActive
+                        IsActive = v.IsActive,
+                        CurrentStatus = v.CurrentStatus
                     };
                 }).ToList();
 
@@ -230,8 +232,10 @@ namespace vehicle_management_backend.Controllers
 
 
 
+        
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] VehicleDTO dto)
+        public async Task<IActionResult> Update(string id, [FromBody] UpdateVehicleDTO dto)
+
         {
             try
             {

@@ -150,7 +150,7 @@
       },
       {
         "Name": "dto",
-        "Type": "vehicle_management_backend.Core.DTOs.VehicleDTO",
+        "Type": "vehicle_management_backend.Core.DTOs.UpdateVehicleDTO",
         "IsRequired": true
       }
     ],
