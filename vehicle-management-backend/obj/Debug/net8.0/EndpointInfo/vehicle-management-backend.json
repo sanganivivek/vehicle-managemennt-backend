@@ -46,6 +46,18 @@
         }
       }
     },
+    "/api/dashboard/stats": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/models/by-brand/{brandId}": {
       "get": {
         "tags": [

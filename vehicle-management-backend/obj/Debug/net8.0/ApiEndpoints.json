@@ -26,6 +26,16 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "DashboardController",
+    "Method": "GetDashboardStats",
+    "RelativePath": "api/dashboard/stats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "vehicle_management_backend.Controllers.ModelController",
     "Method": "Create",
     "RelativePath": "api/models",

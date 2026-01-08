@@ -7,6 +7,6 @@ namespace vehicle_management_backend.Core.DTOs
         public Guid ModelId { get; set; }
         public int? ModelYear { get; set; }
         public bool IsActive { get; set; }
-        public int CurrentStatus { get; set; }
+        public int CurrentStatus { get; set; } = 0;
     }
 }
