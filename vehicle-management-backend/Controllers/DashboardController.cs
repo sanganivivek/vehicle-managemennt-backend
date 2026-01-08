@@ -1,31 +1,37 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using vehicle_management_backend.Infrastructure.Data;
+// The namespace now matches the one defined in VehicleStatus.cs
+using vehicle_management_backend.Core.Enums;
 
-[ApiController]
-[Route("api/dashboard")]
-public class DashboardController : ControllerBase
+namespace vehicle_management_backend.Controllers
 {
-    private readonly AppDbContext _context;
-
-    public DashboardController(AppDbContext context)
+    [ApiController]
+    [Route("api/dashboard")]
+    public class DashboardController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly AppDbContext _context;
 
-    [HttpGet("stats")]
-    public async Task<IActionResult> GetDashboardStats()
-    {
-        var vehicles = await _context.Vehicles.ToListAsync();
-
-        var result = new
+        public DashboardController(AppDbContext context)
         {
-            totalVehicles = vehicles.Count,
-            availableVehicles = vehicles.Count(v => v.CurrentStatus == 0),
-            activeVehicles = vehicles.Count(v => v.CurrentStatus == 1),
-            inMaintenance = vehicles.Count(v => v.CurrentStatus == 2)
-        };
+            _context = context;
+        }
 
-        return Ok(result);
+        [HttpGet("stats")]
+        public async Task<IActionResult> GetDashboardStats()
+        {
+            var vehicles = await _context.Vehicles.ToListAsync();
+
+            var result = new
+            {
+                totalVehicles = vehicles.Count,
+                // Cast Enum to int because your DB 'CurrentStatus' is likely an int
+                availableVehicles = vehicles.Count(v => v.CurrentStatus == (int)VehicleStatus.Available),
+                onRoad = vehicles.Count(v => v.CurrentStatus == (int)VehicleStatus.OnRoad),
+                inMaintenance = vehicles.Count(v => v.CurrentStatus == (int)VehicleStatus.Maintenance)
+            };
+
+            return Ok(result);
+        }
     }
 }

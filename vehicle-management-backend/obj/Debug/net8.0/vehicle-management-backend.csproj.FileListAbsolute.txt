@@ -148,10 +148,10 @@ C:\Projects\vehicle-managemennt-backend\vehicle-management-backend\obj\Debug\net
 C:\Projects\vehicle-managemennt-backend\vehicle-management-backend\obj\Debug\net8.0\staticwebassets.development.json
 C:\Projects\vehicle-managemennt-backend\vehicle-management-backend\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 C:\Projects\vehicle-managemennt-backend\vehicle-management-backend\obj\Debug\net8.0\swae.build.ex.cache
+C:\Projects\vehicle-managemennt-backend\vehicle-management-backend\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Projects\vehicle-managemennt-backend\vehicle-management-backend\obj\Debug\net8.0\vehicle-.30470FEE.Up2Date
 C:\Projects\vehicle-managemennt-backend\vehicle-management-backend\obj\Debug\net8.0\vehicle-management-backend.dll
 C:\Projects\vehicle-managemennt-backend\vehicle-management-backend\obj\Debug\net8.0\refint\vehicle-management-backend.dll
 C:\Projects\vehicle-managemennt-backend\vehicle-management-backend\obj\Debug\net8.0\vehicle-management-backend.pdb
 C:\Projects\vehicle-managemennt-backend\vehicle-management-backend\obj\Debug\net8.0\vehicle-management-backend.genruntimeconfig.cache
 C:\Projects\vehicle-managemennt-backend\vehicle-management-backend\obj\Debug\net8.0\ref\vehicle-management-backend.dll
-C:\Projects\vehicle-managemennt-backend\vehicle-management-backend\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

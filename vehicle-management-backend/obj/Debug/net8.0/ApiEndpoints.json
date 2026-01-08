@@ -26,7 +26,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "DashboardController",
+    "ContainingType": "vehicle_management_backend.Controllers.DashboardController",
     "Method": "GetDashboardStats",
     "RelativePath": "api/dashboard/stats",
     "HttpMethod": "GET",
