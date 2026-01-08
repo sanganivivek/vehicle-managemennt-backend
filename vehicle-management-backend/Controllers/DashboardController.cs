@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using vehicle_management_backend.Infrastructure.Data;
 // The namespace now matches the one defined in VehicleStatus.cs
 using vehicle_management_backend.Core.Enums;
+using vehicle_management_backend.Core.DTOs;
 
 namespace vehicle_management_backend.Controllers
 {
@@ -22,13 +23,12 @@ namespace vehicle_management_backend.Controllers
         {
             var vehicles = await _context.Vehicles.ToListAsync();
 
-            var result = new
+            var result = new DashboardStatsDto
             {
-                totalVehicles = vehicles.Count,
-                // Cast Enum to int because your DB 'CurrentStatus' is likely an int
-                availableVehicles = vehicles.Count(v => v.CurrentStatus == (int)VehicleStatus.Available),
-                onRoad = vehicles.Count(v => v.CurrentStatus == (int)VehicleStatus.OnRoad),
-                inMaintenance = vehicles.Count(v => v.CurrentStatus == (int)VehicleStatus.Maintenance)
+                TotalVehicles = vehicles.Count,
+                AvailableVehicles = vehicles.Count(v => v.CurrentStatus == (int)VehicleStatus.Available),
+                OnRoad = vehicles.Count(v => v.CurrentStatus == (int)VehicleStatus.OnRoad),
+                InMaintenance = vehicles.Count(v => v.CurrentStatus == (int)VehicleStatus.Maintenance)
             };
 
             return Ok(result);

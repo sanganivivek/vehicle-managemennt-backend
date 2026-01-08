@@ -219,7 +219,8 @@ namespace vehicle_management_backend.Controllers
                     BrandName = vehicleBrand?.BrandName ?? "Unknown",
                     ModelName = vehicleModel?.ModelName ?? "Unknown",
                     ModelYear = vehicle.ModelYear,
-                    IsActive = vehicle.IsActive
+                    IsActive = vehicle.IsActive,
+                    CurrentStatus = vehicle.CurrentStatus
                 };
                 return Ok(dto);
             }
