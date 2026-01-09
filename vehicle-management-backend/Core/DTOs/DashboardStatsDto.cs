@@ -7,6 +7,4 @@ namespace vehicle_management_backend.Core.DTOs
         public int OnRoad { get; set; }
         public int InMaintenance { get; set; }
     }
-
 }
-        

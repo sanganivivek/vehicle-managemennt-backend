@@ -5,28 +5,21 @@ using vehicle_management_backend.Infrastructure.Repositories.Implementations;
 using vehicle_management_backend.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models; 
-
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
-
 builder.Services.AddScoped<IBrandRespository, BrandRepository>();
 builder.Services.AddScoped<IBrandService, BrandService>();
-
 builder.Services.AddScoped<IModelRespository, ModelRepository>();
 builder.Services.AddScoped<IModelService, ModelService>();
-
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
     });
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp",
@@ -35,7 +28,6 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
-
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -44,9 +36,7 @@ builder.Services.AddSwaggerGen(c =>
         Version = "1.0"
     });
 });
-
 var app = builder.Build();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -55,13 +45,8 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "vehicle-management-backend");
     });
 }
-
 app.UseHttpsRedirection();
-
 app.UseCors("AllowAngularApp");
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

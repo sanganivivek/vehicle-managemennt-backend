@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using vehicle_management_backend.Application.Services.Interfaces;
 using vehicle_management_backend.Core.DTOs;
 using vehicle_management_backend.Core.Models;
-
 namespace vehicle_management_backend.Controllers
 {
     [ApiController]
@@ -12,26 +11,22 @@ namespace vehicle_management_backend.Controllers
         private readonly IVehicleService _vehicleService;
         private readonly IBrandService _brandService;
         private readonly IModelService _modelService;
-
         public VehicleController(IVehicleService vehicleService, IBrandService brandService, IModelService modelService)
         {
             _vehicleService = vehicleService;
             _brandService = brandService;
             _modelService = modelService;
         }
-
         [HttpGet("test")]
         public IActionResult Test()
         {
             return Ok(new { message = "API is working", timestamp = DateTime.Now });
         }
-
         [HttpPost("simple")]
         public IActionResult CreateSimple()
         {
             return Ok(new { message = "Simple endpoint works" });
         }
-
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateVehicleWithoutNameDTO dto)
         {
@@ -41,12 +36,10 @@ namespace vehicle_management_backend.Controllers
                 {
                     return BadRequest("Request body is null");
                 }
-
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
-
                 var vehicle = new VehicleMaster
                 {
                     VehicleId = Guid.NewGuid(),
@@ -58,7 +51,6 @@ namespace vehicle_management_backend.Controllers
                     IsActive = dto.IsActive,
                     CurrentStatus = dto.CurrentStatus
                 };
-
                 await _vehicleService.CreateAsync(vehicle);
                 return Ok(new { vehicleId = vehicle.VehicleId, message = "Vehicle saved successfully" });
             }
@@ -68,7 +60,6 @@ namespace vehicle_management_backend.Controllers
                 return StatusCode(500, new { error = ex.Message, innerException = ex.InnerException?.Message });
             }
         }
-
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] string? search, [FromQuery] string? brand, [FromQuery] int? status,
             [FromQuery] string? sortBy, [FromQuery] string? sortOrder, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
@@ -78,29 +69,23 @@ namespace vehicle_management_backend.Controllers
                 var vehicles = await _vehicleService.GetAllAsync();
                 var brands = await _brandService.GetBrandsAsync();
                 var models = await _modelService.GetModelsAsync();
-
                 if (vehicles == null)
                 {
                     vehicles = new List<VehicleMaster>();
                 }
-
                 if (status.HasValue)
                 {
                     vehicles = vehicles.Where(v => v.CurrentStatus == status.Value).ToList();
                 }
-
                 if (!string.IsNullOrEmpty(search))
                     vehicles = vehicles.Where(v => v.VehicleName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
                                                   v.RegNo.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
-
                 if (!string.IsNullOrEmpty(brand))
                 {
                     var brandId = brands.FirstOrDefault(b => b.BrandName.Equals(brand, StringComparison.OrdinalIgnoreCase))?.BrandId;
                     if (brandId.HasValue)
                         vehicles = vehicles.Where(v => v.BrandId == brandId.Value).ToList();
                 }
-
-
                 if (!string.IsNullOrEmpty(sortBy))
                 {
                     switch (sortBy.ToLower())
@@ -127,18 +112,13 @@ namespace vehicle_management_backend.Controllers
                             break;
                     }
                 }
-
                 var totalCount = vehicles.Count();
                 var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-
-
                 vehicles = vehicles.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
                 var dtos = vehicles.Select(v =>
                 {
                     var vehicleBrand = brands.FirstOrDefault(b => b.BrandId == v.BrandId);
                     var vehicleModel = models.FirstOrDefault(m => m.ModelId == v.ModelId);
-
                     return new VehicleDTO
                     {
                         VehicleId = v.VehicleId,
@@ -155,7 +135,6 @@ namespace vehicle_management_backend.Controllers
                         CurrentStatus = v.CurrentStatus
                     };
                 }).ToList();
-
                 return Ok(new
                 {
                     totalCount,
@@ -180,33 +159,26 @@ namespace vehicle_management_backend.Controllers
                 });
             }
         }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {
             try
             {
                 VehicleMaster? vehicle = null;
-
-
                 if (Guid.TryParse(id, out Guid vehicleId))
                 {
                     vehicle = await _vehicleService.GetByIdAsync(vehicleId);
                 }
                 else
                 {
-
                     var vehicles = await _vehicleService.GetAllAsync();
                     vehicle = vehicles.FirstOrDefault(v => v.RegNo == id);
                 }
-
                 if (vehicle == null) return NotFound();
-
                 var brands = await _brandService.GetBrandsAsync();
                 var models = await _modelService.GetModelsAsync();
                 var vehicleBrand = brands.FirstOrDefault(b => b.BrandId == vehicle.BrandId);
                 var vehicleModel = models.FirstOrDefault(m => m.ModelId == vehicle.ModelId);
-
                 var dto = new VehicleDTO
                 {
                     VehicleId = vehicle.VehicleId,
@@ -230,21 +202,14 @@ namespace vehicle_management_backend.Controllers
                 return StatusCode(500, new { error = ex.Message });
             }
         }
-
-
-
-        
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] UpdateVehicleDTO dto)
-
         {
             try
             {
                 Console.WriteLine($"Update request received for ID: {id}");
                 Console.WriteLine($"DTO: {System.Text.Json.JsonSerializer.Serialize(dto)}");
-
                 VehicleMaster? vehicle = null;
-
                 if (Guid.TryParse(id, out Guid vehicleId))
                 {
                     vehicle = await _vehicleService.GetByIdAsync(vehicleId);
@@ -254,23 +219,19 @@ namespace vehicle_management_backend.Controllers
                     var vehicles = await _vehicleService.GetAllAsync();
                     vehicle = vehicles.FirstOrDefault(v => v.RegNo == id);
                 }
-
                 if (vehicle == null)
                 {
                     Console.WriteLine($"Vehicle not found for ID: {id}");
                     return NotFound(new { message = "Vehicle not found" });
                 }
-
                 vehicle.RegNo = dto.RegNo;
                 vehicle.ModelYear = dto.ModelYear;
                 vehicle.IsActive = dto.IsActive;
                 vehicle.BrandId = dto.BrandId;
                 vehicle.ModelId = dto.ModelId;
                 vehicle.CurrentStatus = dto.CurrentStatus; 
-
                 await _vehicleService.UpdateAsync(vehicle);
                 Console.WriteLine($"Vehicle updated successfully: {vehicle.VehicleId}");
-
                 return Ok(new { message = "Vehicle updated successfully", vehicleId = vehicle.VehicleId });
             }
             catch (Exception ex)
@@ -280,28 +241,23 @@ namespace vehicle_management_backend.Controllers
                 return StatusCode(500, new { error = ex.Message, details = ex.InnerException?.Message });
             }
         }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             try
             {
-
                 if (Guid.TryParse(id, out Guid vehicleId))
                 {
                     var vehicle = await _vehicleService.GetByIdAsync(vehicleId);
                     if (vehicle == null) return NotFound();
-
                     await _vehicleService.DeleteAsync(vehicleId);
                     return NoContent();
                 }
                 else
                 {
-
                     var vehicles = await _vehicleService.GetAllAsync();
                     var vehicle = vehicles.FirstOrDefault(v => v.RegNo == id);
                     if (vehicle == null) return NotFound();
-
                     await _vehicleService.DeleteAsync(vehicle.VehicleId);
                     return NoContent();
                 }
@@ -312,12 +268,10 @@ namespace vehicle_management_backend.Controllers
                 return StatusCode(500, new { error = ex.Message });
             }
         }
-
         [HttpGet("dashboard")]
         public async Task<IActionResult> GetDashboardData()
         {
             var vehicles = await _vehicleService.GetAllAsync();
-
             var dashboardData = new
             {
                 totalVehicles = vehicles.Count,
@@ -335,7 +289,6 @@ namespace vehicle_management_backend.Controllers
                         isActive = v.IsActive
                     })
             };
-
             return Ok(dashboardData);
         }
     }

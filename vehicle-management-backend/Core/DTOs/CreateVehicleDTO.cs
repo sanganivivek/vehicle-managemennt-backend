@@ -1,5 +1,4 @@
 using System.Security;
-
 namespace vehicle_management_backend.Core.DTOs
 {
     public class VehicleDTO

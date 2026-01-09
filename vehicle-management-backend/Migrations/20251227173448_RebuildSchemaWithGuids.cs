@@ -1,14 +1,10 @@
 using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-
 #nullable disable
-
 namespace vehicle_management_backend.Migrations
 {
-    /// <inheritdoc />
     public partial class RebuildSchemaWithGuids : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -22,7 +18,6 @@ namespace vehicle_management_backend.Migrations
                 {
                     table.PrimaryKey("PK_Brands", x => x.BrandId);
                 });
-
             migrationBuilder.CreateTable(
                 name: "Vehicles",
                 columns: table => new
@@ -35,7 +30,6 @@ namespace vehicle_management_backend.Migrations
                 constraints: table =>
                 {
                 });
-
             migrationBuilder.CreateTable(
                 name: "Models",
                 columns: table => new
@@ -54,22 +48,17 @@ namespace vehicle_management_backend.Migrations
                         principalColumn: "BrandId",
                         onDelete: ReferentialAction.Cascade);
                 });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Models_BrandId",
                 table: "Models",
                 column: "BrandId");
         }
-
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Models");
-
             migrationBuilder.DropTable(
                 name: "Vehicles");
-
             migrationBuilder.DropTable(
                 name: "Brands");
         }

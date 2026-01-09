@@ -1,6 +1,5 @@
 using vehicle_management_backend.Core.DTOs;
 using vehicle_management_backend.Core.Models;
-
 namespace vehicle_management_backend.Application.Services.Interfaces
 {
     public interface IModelService
