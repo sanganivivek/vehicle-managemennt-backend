@@ -4426,11 +4426,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Fleet-Management\\vehicle-managemennt-backend\\vehicle-management-backend\\vehicle-management-backend.csproj",
+      "projectUniqueName": "C:\\Vivek-Projects\\Fleet-Management\\vehicle-managemennt-backend\\vehicle-management-backend\\vehicle-management-backend.csproj",
       "projectName": "vehicle-management-backend",
-      "projectPath": "C:\\Fleet-Management\\vehicle-managemennt-backend\\vehicle-management-backend\\vehicle-management-backend.csproj",
+      "projectPath": "C:\\Vivek-Projects\\Fleet-Management\\vehicle-managemennt-backend\\vehicle-management-backend\\vehicle-management-backend.csproj",
       "packagesPath": "C:\\Users\\VIVEK\\.nuget\\packages\\",
-      "outputPath": "C:\\Fleet-Management\\vehicle-managemennt-backend\\vehicle-management-backend\\obj\\",
+      "outputPath": "C:\\Vivek-Projects\\Fleet-Management\\vehicle-managemennt-backend\\vehicle-management-backend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4508,7 +4508,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
