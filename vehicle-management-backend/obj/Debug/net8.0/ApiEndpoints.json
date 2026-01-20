@@ -27,6 +27,16 @@
   },
   {
     "ContainingType": "vehicle_management_backend.Controllers.DashboardController",
+    "Method": "GetRecentActivity",
+    "RelativePath": "api/dashboard/activity",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "vehicle_management_backend.Controllers.DashboardController",
     "Method": "GetDashboardStats",
     "RelativePath": "api/dashboard/stats",
     "HttpMethod": "GET",

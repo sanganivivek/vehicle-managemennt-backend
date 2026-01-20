@@ -12,5 +12,6 @@ namespace vehicle_management_backend.Core.Models
         public int? ModelYear { get; set; }
         public bool IsActive { get; set; }
         public int CurrentStatus { get; set; } = 0;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
