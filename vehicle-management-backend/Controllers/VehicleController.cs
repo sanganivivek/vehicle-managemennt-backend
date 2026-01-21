@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 using vehicle_management_backend.Application.Services.Interfaces;
 using vehicle_management_backend.Core.DTOs;
 using vehicle_management_backend.Core.Models;
+using vehicle_management_backend.Infrastructure.Data;
 namespace vehicle_management_backend.Controllers
 {
     [ApiController]
@@ -11,11 +13,13 @@ namespace vehicle_management_backend.Controllers
         private readonly IVehicleService _vehicleService;
         private readonly IBrandService _brandService;
         private readonly IModelService _modelService;
-        public VehicleController(IVehicleService vehicleService, IBrandService brandService, IModelService modelService)
+        private readonly AppDbContext _context;
+        public VehicleController(IVehicleService vehicleService, IBrandService brandService, IModelService modelService, AppDbContext context)
         {
             _vehicleService = vehicleService;
             _brandService = brandService;
             _modelService = modelService;
+            _context = context;
         }
         [HttpGet("test")]
         public IActionResult Test()
@@ -52,6 +56,15 @@ namespace vehicle_management_backend.Controllers
                     CurrentStatus = dto.CurrentStatus
                 };
                 await _vehicleService.CreateAsync(vehicle);
+
+                _context.ActivityLogs.Add(new ActivityLog
+                {
+                    Message = $"New vehicle registered: {vehicle.RegNo}",
+                    Type = "success",
+                    CreatedAt = DateTime.UtcNow
+                });
+                await _context.SaveChangesAsync();
+
                 return Ok(new { vehicleId = vehicle.VehicleId, message = "Vehicle saved successfully" });
             }
             catch (Exception ex)
@@ -231,6 +244,13 @@ namespace vehicle_management_backend.Controllers
                 vehicle.ModelId = dto.ModelId;
                 vehicle.CurrentStatus = dto.CurrentStatus; 
                 await _vehicleService.UpdateAsync(vehicle);
+                _context.ActivityLogs.Add(new ActivityLog
+                {
+                    Message = $"Vehicle updated: {vehicle.RegNo}",
+                    Type = "info", // Blue color in frontend
+                    CreatedAt = DateTime.UtcNow
+                });
+                await _context.SaveChangesAsync();
                 Console.WriteLine($"Vehicle updated successfully: {vehicle.VehicleId}");
                 return Ok(new { message = "Vehicle updated successfully", vehicleId = vehicle.VehicleId });
             }
@@ -246,21 +266,43 @@ namespace vehicle_management_backend.Controllers
         {
             try
             {
+                // 1. Define variables to hold data for logging
+                string regNo = "Unknown";
+                Guid vId = Guid.Empty;
+
+                // 2. Find the vehicle first to get its RegNo (before deleting it)
                 if (Guid.TryParse(id, out Guid vehicleId))
                 {
                     var vehicle = await _vehicleService.GetByIdAsync(vehicleId);
                     if (vehicle == null) return NotFound();
-                    await _vehicleService.DeleteAsync(vehicleId);
-                    return NoContent();
+
+                    regNo = vehicle.RegNo; // Capture RegNo
+                    vId = vehicleId;
                 }
                 else
                 {
                     var vehicles = await _vehicleService.GetAllAsync();
                     var vehicle = vehicles.FirstOrDefault(v => v.RegNo == id);
                     if (vehicle == null) return NotFound();
-                    await _vehicleService.DeleteAsync(vehicle.VehicleId);
-                    return NoContent();
+
+                    regNo = vehicle.RegNo; // Capture RegNo
+                    vId = vehicle.VehicleId;
                 }
+
+                // 3. Perform the Delete
+                await _vehicleService.DeleteAsync(vId);
+
+                // 4. Log the Activity (BEFORE returning)
+                _context.ActivityLogs.Add(new ActivityLog
+                {
+                    Message = $"Vehicle deleted: {regNo}",
+                    Type = "warning",
+                    CreatedAt = DateTime.UtcNow
+                });
+                await _context.SaveChangesAsync();
+
+                // 5. Return success response
+                return NoContent();
             }
             catch (Exception ex)
             {

@@ -45,20 +45,21 @@ namespace vehicle_management_backend.Controllers
         [HttpGet("activity")]
         public async Task<IActionResult> GetRecentActivity()
         {
-            var recentVehicles = await _context.Vehicles
+            var recentActivities = await _context.ActivityLogs
                 .OrderByDescending(v => v.CreatedAt)
                 .Take(5)
                 .ToListAsync();
 
-            var activities = recentVehicles.Select(v => new
+            var result = recentActivities.Select(a => new
             {
-                id = v.VehicleId,
-                message = $"New vehicle registered: {v.VehicleName} ({v.RegNo})",
-                time = GetTimeAgo(v.CreatedAt),
-                type = "success"
+                id = a.Id,
+                message = a.Message,
+                time = GetTimeAgo(a.CreatedAt),
+                type = a.Type
+
             });
 
-            return Ok(activities);
+            return Ok(result);
         }
 
         // =========================
