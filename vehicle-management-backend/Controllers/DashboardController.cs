@@ -25,14 +25,24 @@ namespace vehicle_management_backend.Controllers
         [HttpGet("stats")]
         public async Task<IActionResult> GetDashboardStats()
         {
-            var vehicles = await _context.Vehicles.ToListAsync();
+            // Perform aggregation on the database side to avoid loading all rows into memory
+            var stats = await _context.Vehicles
+                .GroupBy(v => 1)
+                .Select(g => new
+                {
+                    Total = g.Count(),
+                    Available = g.Count(v => v.CurrentStatus == (int)VehicleStatus.Available),
+                    OnRoad = g.Count(v => v.CurrentStatus == (int)VehicleStatus.OnRoad),
+                    InMaintenance = g.Count(v => v.CurrentStatus == (int)VehicleStatus.Maintenance)
+                })
+                .FirstOrDefaultAsync();
 
             var result = new DashboardStatsDto
             {
-                TotalVehicles = vehicles.Count,
-                AvailableVehicles = vehicles.Count(v => v.CurrentStatus == (int)VehicleStatus.Available),
-                OnRoad = vehicles.Count(v => v.CurrentStatus == (int)VehicleStatus.OnRoad),
-                InMaintenance = vehicles.Count(v => v.CurrentStatus == (int)VehicleStatus.Maintenance)
+                TotalVehicles = stats?.Total ?? 0,
+                AvailableVehicles = stats?.Available ?? 0,
+                OnRoad = stats?.OnRoad ?? 0,
+                InMaintenance = stats?.InMaintenance ?? 0
             };
 
             return Ok(result);
@@ -45,9 +55,12 @@ namespace vehicle_management_backend.Controllers
         [HttpGet("activity")]
         public async Task<IActionResult> GetRecentActivity()
         {
+            // Project only required fields, use AsNoTracking for read-only query
             var recentActivities = await _context.ActivityLogs
+                .AsNoTracking()
                 .OrderByDescending(v => v.CreatedAt)
                 .Take(5)
+                .Select(a => new { a.Id, a.Message, a.CreatedAt, a.Type })
                 .ToListAsync();
 
             var result = recentActivities.Select(a => new
@@ -56,7 +69,6 @@ namespace vehicle_management_backend.Controllers
                 message = a.Message,
                 time = GetTimeAgo(a.CreatedAt),
                 type = a.Type
-
             });
 
             return Ok(result);

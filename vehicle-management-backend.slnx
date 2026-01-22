@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="BenchmarkSuite1/BenchmarkSuite1.csproj" />
+  <Project Path="TestProject1/TestProject1.csproj" Id="d38ad319-b905-4ea6-95ec-fb390fe3171f" />
   <Project Path="vehicle-management-backend/vehicle-management-backend.csproj" />
 </Solution>
