@@ -2,7 +2,7 @@ namespace vehicle_management_backend.Core.Models
 {
     public class Brand
     {
-        public Guid brandId { get; set; }
+        public Guid BrandId { get; set; } // Fixed: Changed 'brandId' to 'BrandId' (PascalCase)
         public string? BrandCode { get; set; }
         public string? BrandName { get; set; }
         public bool IsActive { get; set; } = true;
