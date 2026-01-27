@@ -12,7 +12,12 @@ namespace vehicle_management_backend.Infrastructure.Repositories.Implementations
         {
             _context = context;
         }
-
+        public async Task<Brand?> GetByCodeAsync(string brandCode)
+        {
+            // Case-insensitive check
+            return await _context.Brands
+                .FirstOrDefaultAsync(b => b.BrandCode.ToLower() == brandCode.ToLower());
+        }
         public async Task AddAsync(Brand brand)
         {
             _context.Brands.Add(brand);

@@ -14,6 +14,7 @@ namespace vehicle_management_backend.Application.Services.Implementations
         {
             return await _vehicleRepository.GetAllAsync();
         }
+        
         public async Task<VehicleMaster?> GetByIdAsync(Guid id)
         {
             return await _vehicleRepository.GetByIdAsync(id);
