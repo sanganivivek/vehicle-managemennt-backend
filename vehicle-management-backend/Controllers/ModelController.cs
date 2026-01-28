@@ -41,7 +41,9 @@ namespace vehicle_management_backend.Controllers
                     ModelName = dto.Name
                 };
                 await _modelService.CreateAsync(model);
-                return Ok(model);
+
+                // FIX: Return a simple object or DTO instead of the raw Entity
+                return Ok(new { message = "Model created successfully", modelId = model.ModelId });
             }
             catch (Exception ex)
             {

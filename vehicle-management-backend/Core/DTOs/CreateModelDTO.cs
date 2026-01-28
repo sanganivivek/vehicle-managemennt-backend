@@ -8,5 +8,6 @@ namespace vehicle_management_backend.Core.DTOs
         [Required]
         [StringLength(50, MinimumLength = 1)]
         public string Name { get; set; }
+        public Guid BrandId { get; internal set; }
     }
 }
