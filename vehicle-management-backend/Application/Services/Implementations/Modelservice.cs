@@ -21,13 +21,51 @@ namespace vehicle_management_backend.Application.Services.Implementations
             return models.Select(m => new ModelDTO
             {
                 ModelId = m.ModelId,
+                ModelCode = m.ModelCode,
                 ModelName = m.ModelName,
+                ModelType = m.ModelType,
+                Description = m.Description,
                 BrandId = m.BrandId
             }).ToList();
         }
         public async Task CreateAsync(Model model)
         {
             await _modelRepository.AddAsync(model);
+        }
+
+        public async Task<ModelDTO?> GetByIdAsync(Guid id)
+        {
+            var model = await _modelRepository.GetByIdAsync(id);
+            if (model == null) return null;
+
+            return new ModelDTO
+            {
+                ModelId = model.ModelId,
+                ModelCode = model.ModelCode,
+                ModelName = model.ModelName,
+                ModelType = model.ModelType,
+                Description = model.Description,
+                BrandId = model.BrandId
+            };
+        }
+
+        public async Task UpdateAsync(Guid id, CreateModelDTO dto)
+        {
+            var model = await _modelRepository.GetByIdAsync(id);
+            if (model != null)
+            {
+                model.BrandId = dto.BrandId;
+                model.ModelCode = dto.ModelCode;
+                model.ModelName = dto.Name;
+                model.ModelType = dto.ModelType;
+                model.Description = dto.Description;
+                await _modelRepository.UpdateAsync(model);
+            }
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            await _modelRepository.DeleteAsync(id);
         }
     }
 }

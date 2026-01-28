@@ -12,8 +12,8 @@ using vehicle_management_backend.Infrastructure.Data;
 namespace vehicle_management_backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260121095804_mssql.local_migration_857")]
-    partial class mssqllocal_migration_857
+    [Migration("20260128095735_AddModelColumns")]
+    partial class AddModelColumns
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,8 +55,14 @@ namespace vehicle_management_backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("BrandCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("BrandName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.HasKey("BrandId");
 
@@ -72,7 +78,16 @@ namespace vehicle_management_backend.Migrations
                     b.Property<Guid>("BrandId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModelCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ModelName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModelType")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ModelId");
@@ -91,11 +106,30 @@ namespace vehicle_management_backend.Migrations
                     b.Property<Guid>("BrandId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ChassisNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("CurrentStatus")
                         .HasColumnType("int");
+
+                    b.Property<string>("EngineNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("FitnessCertificateExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FuelType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("InsurancePolicyExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InsurancePolicyNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -103,18 +137,33 @@ namespace vehicle_management_backend.Migrations
                     b.Property<Guid>("ModelId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("ModelYear")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("RcExpiryDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("RegNo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("VehicleName")
-                        .IsRequired()
+                    b.Property<int>("SeatingCapacity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Transmission")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VehicleColour")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("VehicleType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("YearOfManufacture")
+                        .HasColumnType("int");
+
                     b.HasKey("VehicleId");
+
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("ModelId");
 
                     b.ToTable("Vehicles");
                 });
@@ -128,6 +177,25 @@ namespace vehicle_management_backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Brand");
+                });
+
+            modelBuilder.Entity("vehicle_management_backend.Core.Models.VehicleMaster", b =>
+                {
+                    b.HasOne("vehicle_management_backend.Core.Models.Brand", "Brand")
+                        .WithMany()
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("vehicle_management_backend.Core.Models.Model", "Model")
+                        .WithMany()
+                        .HasForeignKey("ModelId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("Model");
                 });
 
             modelBuilder.Entity("vehicle_management_backend.Core.Models.Brand", b =>

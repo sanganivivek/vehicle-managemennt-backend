@@ -9,22 +9,100 @@ namespace vehicle_management_backend.Controllers
     public class ModelController : ControllerBase
     {
         private readonly IModelService _modelService;
-        public ModelController(IModelService modelService)
+        private readonly IBrandService _brandService;
+        
+        public ModelController(IModelService modelService, IBrandService brandService)
         {
             _modelService = modelService;
+            _brandService = brandService;
         }
+        
         [HttpGet("by-brand/{brandId}")]
         public async Task<IActionResult> GetByBrand(Guid brandId)
         {
             var models = await _modelService.GetModelsByBrandAsync(brandId);
-            var dtos = models.Select(m => new ModelDTO
+            var brands = await _brandService.GetBrandsAsync();
+            
+            var dtos = models.Select(m =>
             {
-                ModelId = m.ModelId,
-                ModelName = m.ModelName,
-                BrandId = m.BrandId
+                var brand = brands.FirstOrDefault(b => b.BrandId == m.BrandId);
+                return new ModelDTO
+                {
+                    ModelId = m.ModelId,
+                    ModelCode = m.ModelCode,
+                    ModelName = m.ModelName,
+                    ModelType = m.ModelType,
+                    Description = m.Description,
+                    BrandId = m.BrandId,
+                    BrandName = brand?.BrandName,
+                    BrandCode = brand?.BrandCode
+                };
             });
             return Ok(dtos);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var models = await _modelService.GetModelsAsync();
+            var brands = await _brandService.GetBrandsAsync();
+            
+            var dtos = models.Select(m =>
+            {
+                var brand = brands.FirstOrDefault(b => b.BrandId == m.BrandId);
+                return new ModelDTO
+                {
+                    ModelId = m.ModelId,
+                    ModelCode = m.ModelCode,
+                    ModelName = m.ModelName,
+                    ModelType = m.ModelType,
+                    Description = m.Description,
+                    BrandId = m.BrandId,
+                    BrandName = brand?.BrandName,
+                    BrandCode = brand?.BrandCode
+                };
+            });
+            return Ok(dtos);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var model = await _modelService.GetByIdAsync(id);
+            if (model == null) return NotFound();
+            
+            var brands = await _brandService.GetBrandsAsync();
+            var brand = brands.FirstOrDefault(b => b.BrandId == model.BrandId);
+            
+            var dto = new ModelDTO
+            {
+                ModelId = model.ModelId,
+                ModelCode = model.ModelCode,
+                ModelName = model.ModelName,
+                ModelType = model.ModelType,
+                Description = model.Description,
+                BrandId = model.BrandId,
+                BrandName = brand?.BrandName,
+                BrandCode = brand?.BrandCode
+            };
+            
+            return Ok(dto);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, CreateModelDTO dto)
+        {
+            await _modelService.UpdateAsync(id, dto);
+            return Ok(new { message = "Model updated successfully" });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _modelService.DeleteAsync(id);
+            return Ok(new { message = "Model deleted successfully" });
+        }
+        
         [HttpPost]
         public async Task<IActionResult> Create(CreateModelDTO dto)
         {
@@ -38,11 +116,13 @@ namespace vehicle_management_backend.Controllers
                 {
                     ModelId = Guid.NewGuid(),
                     BrandId = dto.BrandId,
-                    ModelName = dto.Name
+                    ModelCode = dto.ModelCode,
+                    ModelName = dto.Name,
+                    ModelType = dto.ModelType,
+                    Description = dto.Description
                 };
                 await _modelService.CreateAsync(model);
 
-                // FIX: Return a simple object or DTO instead of the raw Entity
                 return Ok(new { message = "Model created successfully", modelId = model.ModelId });
             }
             catch (Exception ex)

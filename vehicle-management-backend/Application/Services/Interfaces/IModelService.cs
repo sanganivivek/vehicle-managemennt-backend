@@ -6,6 +6,9 @@ namespace vehicle_management_backend.Application.Services.Interfaces
     {
         Task<List<Model>> GetModelsByBrandAsync(Guid brandId);
         Task<List<ModelDTO>> GetModelsAsync();
+        Task<ModelDTO?> GetByIdAsync(Guid id);
         Task CreateAsync(Model model);
+        Task UpdateAsync(Guid id, CreateModelDTO dto);
+        Task DeleteAsync(Guid id);
     }
 }

@@ -1,0 +1,9 @@
+### Create Brand (Test Case 1)
+POST http://localhost:5167/api/brands
+Content-Type: application/json
+
+{
+    "brandCode": "TOYOTA",
+    "brandName": "Toyota",
+    "isActive": true
+}

@@ -47,11 +47,21 @@ namespace vehicle_management_backend.Controllers
                 var vehicle = new VehicleMaster
                 {
                     VehicleId = Guid.NewGuid(),
-                    VehicleName = $"Vehicle-{DateTime.Now:yyyyMMddHHmmss}",
                     RegNo = dto.RegNo ?? string.Empty,
+                    ChassisNumber = dto.ChassisNumber ?? string.Empty,
                     BrandId = dto.BrandId,
                     ModelId = dto.ModelId,
-                    ModelYear = dto.ModelYear,
+                    YearOfManufacture = dto.YearOfManufacture,
+                    VehicleType = dto.VehicleType,
+                    FuelType = dto.FuelType,
+                    Transmission = dto.Transmission,
+                    SeatingCapacity = dto.SeatingCapacity,
+                    VehicleColour = dto.VehicleColour,
+                    EngineNumber = dto.EngineNumber,
+                    InsurancePolicyNumber = dto.InsurancePolicyNumber,
+                    InsurancePolicyExpiryDate = dto.InsurancePolicyExpiryDate,
+                    RcExpiryDate = dto.RcExpiryDate,
+                    FitnessCertificateExpiryDate = dto.FitnessCertificateExpiryDate,
                     IsActive = dto.IsActive,
                     CurrentStatus = dto.CurrentStatus
                 };
@@ -91,8 +101,8 @@ namespace vehicle_management_backend.Controllers
                     vehicles = vehicles.Where(v => v.CurrentStatus == status.Value).ToList();
                 }
                 if (!string.IsNullOrEmpty(search))
-                    vehicles = vehicles.Where(v => v.VehicleName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                                                  v.RegNo.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                    vehicles = vehicles.Where(v => v.RegNo.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                                                  v.ChassisNumber.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
                 if (!string.IsNullOrEmpty(brand))
                 {
                     var brandId = brands.FirstOrDefault(b => b.BrandName.Equals(brand, StringComparison.OrdinalIgnoreCase))?.BrandId;
@@ -120,8 +130,8 @@ namespace vehicle_management_backend.Controllers
                             break;
                         default:
                             vehicles = sortOrder?.ToLower() == "desc" ?
-                                vehicles.OrderByDescending(v => v.VehicleName).ToList() :
-                                vehicles.OrderBy(v => v.VehicleName).ToList();
+                                vehicles.OrderByDescending(v => v.CreatedAt).ToList() :
+                                vehicles.OrderBy(v => v.CreatedAt).ToList();
                             break;
                     }
                 }
@@ -135,15 +145,23 @@ namespace vehicle_management_backend.Controllers
                     return new VehicleDTO
                     {
                         VehicleId = v.VehicleId,
-                        VehicleName = v.VehicleName,
                         RegNo = v.RegNo,
-                        BrandCode = v.BrandId,
+                        ChassisNumber = v.ChassisNumber,
+                        BrandId = v.BrandId,
                         ModelId = v.ModelId,
-                        Brand = vehicleBrand?.BrandName ?? "Unknown",
-                        Model = vehicleModel?.ModelName ?? "Unknown",
                         BrandName = vehicleBrand?.BrandName ?? "Unknown",
                         ModelName = vehicleModel?.ModelName ?? "Unknown",
-                        ModelYear = v.ModelYear,
+                        VehicleType = v.VehicleType.ToString(),
+                        FuelType = v.FuelType.ToString(),
+                        Transmission = v.Transmission.ToString(),
+                        SeatingCapacity = v.SeatingCapacity,
+                        VehicleColour = v.VehicleColour,
+                        YearOfManufacture = v.YearOfManufacture,
+                        EngineNumber = v.EngineNumber,
+                        InsurancePolicyNumber = v.InsurancePolicyNumber,
+                        InsurancePolicyExpiryDate = v.InsurancePolicyExpiryDate,
+                        RcExpiryDate = v.RcExpiryDate,
+                        FitnessCertificateExpiryDate = v.FitnessCertificateExpiryDate,
                         IsActive = v.IsActive,
                         CurrentStatus = v.CurrentStatus
                     };
@@ -195,15 +213,23 @@ namespace vehicle_management_backend.Controllers
                 var dto = new VehicleDTO
                 {
                     VehicleId = vehicle.VehicleId,
-                    VehicleName = vehicle.VehicleName,
                     RegNo = vehicle.RegNo,
+                    ChassisNumber = vehicle.ChassisNumber,
                     BrandId = vehicle.BrandId,
                     ModelId = vehicle.ModelId,
-                    Brand = vehicleBrand?.BrandName ?? "Unknown",
-                    Model = vehicleModel?.ModelName ?? "Unknown",
                     BrandName = vehicleBrand?.BrandName ?? "Unknown",
                     ModelName = vehicleModel?.ModelName ?? "Unknown",
-                    ModelYear = vehicle.ModelYear,
+                    VehicleType = vehicle.VehicleType.ToString(),
+                    FuelType = vehicle.FuelType.ToString(),
+                    Transmission = vehicle.Transmission.ToString(),
+                    SeatingCapacity = vehicle.SeatingCapacity,
+                    VehicleColour = vehicle.VehicleColour,
+                    YearOfManufacture = vehicle.YearOfManufacture,
+                    EngineNumber = vehicle.EngineNumber,
+                    InsurancePolicyNumber = vehicle.InsurancePolicyNumber,
+                    InsurancePolicyExpiryDate = vehicle.InsurancePolicyExpiryDate,
+                    RcExpiryDate = vehicle.RcExpiryDate,
+                    FitnessCertificateExpiryDate = vehicle.FitnessCertificateExpiryDate,
                     IsActive = vehicle.IsActive,
                     CurrentStatus = vehicle.CurrentStatus
                 };
@@ -238,10 +264,21 @@ namespace vehicle_management_backend.Controllers
                     return NotFound(new { message = "Vehicle not found" });
                 }
                 vehicle.RegNo = dto.RegNo;
-                vehicle.ModelYear = dto.ModelYear;
-                vehicle.IsActive = dto.IsActive;
+                vehicle.ChassisNumber = dto.ChassisNumber;
                 vehicle.BrandId = dto.BrandId;
                 vehicle.ModelId = dto.ModelId;
+                vehicle.YearOfManufacture = dto.YearOfManufacture;
+                vehicle.VehicleType = dto.VehicleType;
+                vehicle.FuelType = dto.FuelType;
+                vehicle.Transmission = dto.Transmission;
+                vehicle.SeatingCapacity = dto.SeatingCapacity;
+                vehicle.VehicleColour = dto.VehicleColour;
+                vehicle.EngineNumber = dto.EngineNumber;
+                vehicle.InsurancePolicyNumber = dto.InsurancePolicyNumber;
+                vehicle.InsurancePolicyExpiryDate = dto.InsurancePolicyExpiryDate;
+                vehicle.RcExpiryDate = dto.RcExpiryDate;
+                vehicle.FitnessCertificateExpiryDate = dto.FitnessCertificateExpiryDate;
+                vehicle.IsActive = dto.IsActive;
                 vehicle.CurrentStatus = dto.CurrentStatus; 
                 await _vehicleService.UpdateAsync(vehicle);
                 _context.ActivityLogs.Add(new ActivityLog
@@ -323,11 +360,10 @@ namespace vehicle_management_backend.Controllers
                     .Select(v => new
                     {
                         vehicleId = v.VehicleId,
-                        vehicleName = v.VehicleName,
                         regNo = v.RegNo,
                         brandId = v.BrandId,
                         modelId = v.ModelId,
-                        modelYear = v.ModelYear,
+                        yearOfManufacture = v.YearOfManufacture,
                         isActive = v.IsActive
                     })
             };

@@ -1,0 +1,33 @@
+### Create Vehicle (Test Case 1)
+# Note: Replace brandId and modelId with actual UUIDs.
+POST http://localhost:5167/api/vehicles
+Content-Type: application/json
+
+{
+  "regNo": "KA-01-AB-1234",
+  "chassisNumber": "CHASSIS123456789",
+  "brandId": "REPLACE_WITH_BRAND_ID_HERE",
+  "modelId": "REPLACE_WITH_MODEL_ID_HERE",
+  
+  "vehicleType": 1, 
+  "fuelType": 0,    
+  "transmission": 1,
+  
+  "seatingCapacity": 5,
+  "vehicleColour": "White",
+  "yearOfManufacture": 2024,
+  
+  "engineNumber": "ENGINE987654321",
+  "insurancePolicyNumber": "INS-POL-001",
+  "insurancePolicyExpiryDate": "2025-01-28T00:00:00Z",
+  "rcExpiryDate": "2039-01-28T00:00:00Z",
+  "fitnessCertificateExpiryDate": "2039-01-28T00:00:00Z",
+  
+  "isActive": true,
+  "currentStatus": 1
+}
+
+# Enum Values Reference:
+# VehicleType: 0=Hatchback, 1=Sedan, 2=SUV
+# FuelType: 0=Petrol, 1=Diesel, 2=EV
+# Transmission: 0=Manual, 1=Automatic

@@ -3,7 +3,10 @@ namespace vehicle_management_backend.Core.Models
     public class Model
     {
         public Guid ModelId { get; set; }
+        public string? ModelCode { get; set; }
         public string? ModelName { get; set; }
+        public string? ModelType { get; set; } // Variant
+        public string? Description { get; set; }
         public Guid BrandId { get; set; }
         public Brand? Brand { get; set; }
     }

@@ -1,0 +1,12 @@
+### Create Model (Test Case 1)
+# Note: You need to replace the brandId with the UUID returned from the Brand creation response.
+POST http://localhost:5167/api/models
+Content-Type: application/json
+
+{
+    "name": "Corolla", 
+    "modelCode": "COROLLA-2024",
+    "modelType": "Sedan",
+    "description": "Standard sedan",
+    "brandId": "REPLACE_WITH_BRAND_ID_HERE"
+}
