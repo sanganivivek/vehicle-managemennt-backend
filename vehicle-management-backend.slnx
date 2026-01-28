@@ -1,5 +1,4 @@
 <Solution>
-  <Project Path="BrankCreateTest/BrankCreateTest.csproj" Id="b26394fa-f6d7-410a-a940-2e848ec82e56" />
   <Project Path="TestProject1/TestProject1.csproj" Id="d38ad319-b905-4ea6-95ec-fb390fe3171f" />
   <Project Path="vehicle-management-backend/vehicle-management-backend.csproj" />
 </Solution>

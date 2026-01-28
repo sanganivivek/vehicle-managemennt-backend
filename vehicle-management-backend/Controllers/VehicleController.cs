@@ -137,7 +137,7 @@ namespace vehicle_management_backend.Controllers
                         VehicleId = v.VehicleId,
                         VehicleName = v.VehicleName,
                         RegNo = v.RegNo,
-                        BrandId = v.BrandId,
+                        BrandCode = v.BrandId,
                         ModelId = v.ModelId,
                         Brand = vehicleBrand?.BrandName ?? "Unknown",
                         Model = vehicleModel?.ModelName ?? "Unknown",
