@@ -17,11 +17,12 @@ builder.Services.AddScoped<IModelRespository, ModelRepository>();
 builder.Services.AddScoped<IModelService, ModelService>();
 
 builder.Services.AddControllers()
-
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        // Add JsonStringEnumConverter to serialize enums as strings instead of integers
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCors(options =>

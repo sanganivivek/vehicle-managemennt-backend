@@ -23,7 +23,7 @@ namespace vehicle_management_backend.Application.Services.Implementations
                 ModelId = m.ModelId,
                 ModelCode = m.ModelCode,
                 ModelName = m.ModelName,
-                ModelType = m.ModelType,
+
                 Description = m.Description,
                 BrandId = m.BrandId
             }).ToList();
@@ -43,7 +43,7 @@ namespace vehicle_management_backend.Application.Services.Implementations
                 ModelId = model.ModelId,
                 ModelCode = model.ModelCode,
                 ModelName = model.ModelName,
-                ModelType = model.ModelType,
+
                 Description = model.Description,
                 BrandId = model.BrandId
             };
@@ -62,7 +62,7 @@ namespace vehicle_management_backend.Application.Services.Implementations
                 model.BrandId = dto.BrandId;
                 model.ModelCode = dto.ModelCode;
                 model.ModelName = dto.Name;
-                model.ModelType = dto.ModelType;
+
                 model.Description = dto.Description;
                 await _modelRepository.UpdateAsync(model);
             }

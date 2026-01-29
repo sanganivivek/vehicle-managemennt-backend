@@ -31,7 +31,7 @@ namespace vehicle_management_backend.Controllers
                     ModelId = m.ModelId,
                     ModelCode = m.ModelCode,
                     ModelName = m.ModelName,
-                    ModelType = m.ModelType,
+
                     Description = m.Description,
                     BrandId = m.BrandId,
                     BrandName = brand?.BrandName,
@@ -55,7 +55,7 @@ namespace vehicle_management_backend.Controllers
                     ModelId = m.ModelId,
                     ModelCode = m.ModelCode,
                     ModelName = m.ModelName,
-                    ModelType = m.ModelType,
+
                     Description = m.Description,
                     BrandId = m.BrandId,
                     BrandName = brand?.BrandName,
@@ -79,7 +79,7 @@ namespace vehicle_management_backend.Controllers
                 ModelId = model.ModelId,
                 ModelCode = model.ModelCode,
                 ModelName = model.ModelName,
-                ModelType = model.ModelType,
+
                 Description = model.Description,
                 BrandId = model.BrandId,
                 BrandName = brand?.BrandName,
@@ -142,7 +142,7 @@ namespace vehicle_management_backend.Controllers
                     BrandId = dto.BrandId,
                     ModelCode = dto.ModelCode,
                     ModelName = dto.Name,
-                    ModelType = dto.ModelType,
+
                     Description = dto.Description
                 };
                 await _modelService.CreateAsync(model);
