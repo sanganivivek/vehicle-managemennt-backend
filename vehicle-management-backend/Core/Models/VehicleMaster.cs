@@ -10,7 +10,7 @@ namespace vehicle_management_backend.Core.Models
         public string ChassisNumber { get; set; } = string.Empty;
 
         // Foreign Keys
-        public Guid BrandId { get; set; }
+        public Guid BrandId { get; set; }   
         public Brand? Brand { get; set; }
 
         public Guid ModelId { get; set; }

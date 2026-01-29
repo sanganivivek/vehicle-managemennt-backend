@@ -4,7 +4,7 @@ namespace vehicle_management_backend.Core.DTOs
     {
         public int TotalVehicles { get; set; }
         public int AvailableVehicles { get; set; }
-        public int OnRoad { get; set; }
-        public int InMaintenance { get; set; }
+        public int Rented { get; set; }
+        public int Inmaintance { get; set; }
     }
 }

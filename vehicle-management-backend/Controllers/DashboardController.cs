@@ -32,8 +32,8 @@ namespace vehicle_management_backend.Controllers
                 {
                     Total = g.Count(),
                     Available = g.Count(v => v.CurrentStatus == (int)VehicleStatus.Available),
-                    OnRoad = g.Count(v => v.CurrentStatus == (int)VehicleStatus.OnRoad),
-                    InMaintenance = g.Count(v => v.CurrentStatus == (int)VehicleStatus.Maintenance)
+                    Rented = g.Count(v => v.CurrentStatus == (int)VehicleStatus.Rented),
+                    Inmaintance = g.Count(v => v.CurrentStatus == (int)VehicleStatus.Inmaintance)
                 })
                 .FirstOrDefaultAsync();
 
@@ -41,8 +41,8 @@ namespace vehicle_management_backend.Controllers
             {
                 TotalVehicles = stats?.Total ?? 0,
                 AvailableVehicles = stats?.Available ?? 0,
-                OnRoad = stats?.OnRoad ?? 0,
-                InMaintenance = stats?.InMaintenance ?? 0
+                Rented = stats?.Rented ?? 0,
+                Inmaintance = stats?.Inmaintance ?? 0
             };
 
             return Ok(result);
