@@ -11,7 +11,8 @@ namespace vehicle_management_backend.Core.Enums
     {
         Petrol,
         Diesel,
-        EV
+        CNG,
+        E20
     }
 
     public enum Transmission
