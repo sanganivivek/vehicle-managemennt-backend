@@ -44,6 +44,36 @@ namespace vehicle_management_backend.Controllers
                 {
                     return BadRequest(ModelState);
                 }
+
+                // Validate Brand exists
+                var brand = await _brandService.GetBrandByIdAsync(dto.BrandId);
+                if (brand == null)
+                {
+                    return BadRequest(new { 
+                        error = "Invalid Brand", 
+                        message = $"Brand with ID '{dto.BrandId}' does not exist in the database. Please select a valid brand." 
+                    });
+                }
+
+                // Validate Model exists
+                var model = await _modelService.GetModelByIdAsync(dto.ModelId);
+                if (model == null)
+                {
+                    return BadRequest(new { 
+                        error = "Invalid Model", 
+                        message = $"Model with ID '{dto.ModelId}' does not exist in the database. Please select a valid model." 
+                    });
+                }
+
+                // Validate Model belongs to the selected Brand
+                if (model.BrandId != dto.BrandId)
+                {
+                    return BadRequest(new { 
+                        error = "Model-Brand Mismatch", 
+                        message = $"The selected model '{model.ModelName}' does not belong to the selected brand '{brand.BrandName}'. Please select a valid model for this brand." 
+                    });
+                }
+
                 var vehicle = new VehicleMaster
                 {
                     VehicleId = Guid.NewGuid(),
@@ -248,6 +278,7 @@ namespace vehicle_management_backend.Controllers
             {
                 Console.WriteLine($"Update request received for ID: {id}");
                 Console.WriteLine($"DTO: {System.Text.Json.JsonSerializer.Serialize(dto)}");
+                
                 VehicleMaster? vehicle = null;
                 if (Guid.TryParse(id, out Guid vehicleId))
                 {
@@ -258,11 +289,42 @@ namespace vehicle_management_backend.Controllers
                     var vehicles = await _vehicleService.GetAllAsync();
                     vehicle = vehicles.FirstOrDefault(v => v.RegNo == id);
                 }
+                
                 if (vehicle == null)
                 {
                     Console.WriteLine($"Vehicle not found for ID: {id}");
                     return NotFound(new { message = "Vehicle not found" });
                 }
+
+                // Validate Brand exists
+                var brand = await _brandService.GetBrandByIdAsync(dto.BrandId);
+                if (brand == null)
+                {
+                    return BadRequest(new { 
+                        error = "Invalid Brand", 
+                        message = $"Brand with ID '{dto.BrandId}' does not exist in the database. Please select a valid brand." 
+                    });
+                }
+
+                // Validate Model exists
+                var model = await _modelService.GetModelByIdAsync(dto.ModelId);
+                if (model == null)
+                {
+                    return BadRequest(new { 
+                        error = "Invalid Model", 
+                        message = $"Model with ID '{dto.ModelId}' does not exist in the database. Please select a valid model." 
+                    });
+                }
+
+                // Validate Model belongs to the selected Brand
+                if (model.BrandId != dto.BrandId)
+                {
+                    return BadRequest(new { 
+                        error = "Model-Brand Mismatch", 
+                        message = $"The selected model '{model.ModelName}' does not belong to the selected brand '{brand.BrandName}'. Please select a valid model for this brand." 
+                    });
+                }
+
                 vehicle.RegNo = dto.RegNo;
                 vehicle.ChassisNumber = dto.ChassisNumber;
                 vehicle.BrandId = dto.BrandId;
@@ -280,7 +342,9 @@ namespace vehicle_management_backend.Controllers
                 vehicle.FitnessCertificateExpiryDate = dto.FitnessCertificateExpiryDate;
                 vehicle.IsActive = dto.IsActive;
                 vehicle.CurrentStatus = dto.CurrentStatus; 
+                
                 await _vehicleService.UpdateAsync(vehicle);
+                
                 _context.ActivityLogs.Add(new ActivityLog
                 {
                     Message = $"Vehicle updated: {vehicle.RegNo}",
@@ -288,6 +352,7 @@ namespace vehicle_management_backend.Controllers
                     CreatedAt = DateTime.UtcNow
                 });
                 await _context.SaveChangesAsync();
+                
                 Console.WriteLine($"Vehicle updated successfully: {vehicle.VehicleId}");
                 return Ok(new { message = "Vehicle updated successfully", vehicleId = vehicle.VehicleId });
             }

@@ -49,6 +49,11 @@ namespace vehicle_management_backend.Application.Services.Implementations
             };
         }
 
+        public async Task<Model?> GetModelByIdAsync(Guid id)
+        {
+            return await _modelRepository.GetByIdAsync(id);
+        }
+
         public async Task UpdateAsync(Guid id, CreateModelDTO dto)
         {
             var model = await _modelRepository.GetByIdAsync(id);

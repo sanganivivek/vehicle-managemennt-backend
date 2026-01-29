@@ -39,17 +39,9 @@ namespace vehicle_management_backend.Application.Services.Implementations
             }).ToList();
         }
 
-        public async Task<BrandDTO?> GetBrandByIdAsync(Guid id)
+        public async Task<Brand?> GetBrandByIdAsync(Guid id)
         {
-            var brand = await _brandRepository.GetByIdAsync(id);
-            if (brand == null) return null;
-            return new BrandDTO
-            {
-                BrandId = brand.BrandId,
-                BrandName = brand.BrandName,
-                BrandCode = brand.BrandCode,
-                IsActive = brand.IsActive
-            };
+            return await _brandRepository.GetByIdAsync(id);
         }
 
         public async Task UpdateBrandAsync(Guid id, BrandDTO dto)

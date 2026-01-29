@@ -46,8 +46,32 @@ namespace vehicle_management_backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _brandService.DeleteBrandAsync(id);
-            return Ok(new { message = "Brand deleted successfully" });
+            try
+            {
+                // Check if any models reference this brand
+                var modelService = HttpContext.RequestServices.GetService<IModelService>();
+                if (modelService != null)
+                {
+                    var models = await modelService.GetModelsAsync();
+                    var modelsUsingBrand = models.Where(m => m.BrandId == id).ToList();
+                    
+                    if (modelsUsingBrand.Any())
+                    {
+                        return BadRequest(new { 
+                            error = "Cannot Delete Brand", 
+                            message = $"Cannot delete this brand because {modelsUsingBrand.Count} model(s) are currently associated with it. Please delete or reassign those models first.",
+                            modelCount = modelsUsingBrand.Count
+                        });
+                    }
+                }
+
+                await _brandService.DeleteBrandAsync(id);
+                return Ok(new { message = "Brand deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message, innerException = ex.InnerException?.Message });
+            }
         }
     }
 }

@@ -99,8 +99,32 @@ namespace vehicle_management_backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _modelService.DeleteAsync(id);
-            return Ok(new { message = "Model deleted successfully" });
+            try
+            {
+                // Check if any vehicles reference this model
+                var vehicleService = HttpContext.RequestServices.GetService<IVehicleService>();
+                if (vehicleService != null)
+                {
+                    var vehicles = await vehicleService.GetAllAsync();
+                    var vehiclesUsingModel = vehicles.Where(v => v.ModelId == id).ToList();
+                    
+                    if (vehiclesUsingModel.Any())
+                    {
+                        return BadRequest(new { 
+                            error = "Cannot Delete Model", 
+                            message = $"Cannot delete this model because {vehiclesUsingModel.Count} vehicle(s) are currently using it. Please reassign or delete those vehicles first.",
+                            vehicleCount = vehiclesUsingModel.Count
+                        });
+                    }
+                }
+
+                await _modelService.DeleteAsync(id);
+                return Ok(new { message = "Model deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message, innerException = ex.InnerException?.Message });
+            }
         }
         
         [HttpPost]
