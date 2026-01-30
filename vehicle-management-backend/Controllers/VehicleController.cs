@@ -434,5 +434,144 @@ namespace vehicle_management_backend.Controllers
             };
             return Ok(dashboardData);
         }
+
+        // STORED PROCEDURE ENDPOINTS
+        
+        [HttpGet("list-sp")]
+        public async Task<IActionResult> GetAllViaSP()
+        {
+            try
+            {
+                var vehicles = await _vehicleService.GetAllSPAsync();
+                var brands = await _brandService.GetBrandsAsync();
+                var models = await _modelService.GetModelsAsync();
+
+                if (vehicles == null)
+                {
+                    vehicles = new List<VehicleMaster>();
+                }
+
+                var dtos = vehicles.Select(v =>
+                {
+                    var vehicleBrand = brands.FirstOrDefault(b => b.BrandId == v.BrandId);
+                    var vehicleModel = models.FirstOrDefault(m => m.ModelId == v.ModelId);
+                    return new VehicleDTO
+                    {
+                        VehicleId = v.VehicleId,
+                        RegNo = v.RegNo,
+                        ChassisNumber = v.ChassisNumber,
+                        BrandId = v.BrandId,
+                        ModelId = v.ModelId,
+                        BrandName = vehicleBrand?.BrandName ?? "Unknown",
+                        ModelName = vehicleModel?.ModelName ?? "Unknown",
+                        VehicleType = v.VehicleType.ToString(),
+                        FuelType = v.FuelType.ToString(),
+                        Transmission = v.Transmission.ToString(),
+                        SeatingCapacity = v.SeatingCapacity,
+                        VehicleColour = v.VehicleColour,
+                        YearOfManufacture = v.YearOfManufacture,
+                        EngineNumber = v.EngineNumber,
+                        InsurancePolicyNumber = v.InsurancePolicyNumber,
+                        InsurancePolicyExpiryDate = v.InsurancePolicyExpiryDate,
+                        RcExpiryDate = v.RcExpiryDate,
+                        FitnessCertificateExpiryDate = v.FitnessCertificateExpiryDate,
+                        IsActive = v.IsActive,
+                        CurrentStatus = v.CurrentStatus
+                    };
+                }).ToList();
+
+                return Ok(dtos);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetAllViaSP: {ex.Message}");
+                return StatusCode(500, new { error = ex.Message, innerException = ex.InnerException?.Message });
+            }
+        }
+
+        [HttpPost("create-sp")]
+        public async Task<IActionResult> CreateViaSP([FromBody] CreateVehicleWithoutNameDTO dto)
+        {
+            try
+            {
+                if (dto == null)
+                {
+                    return BadRequest("Request body is null");
+                }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                // Validate Brand exists
+                var brand = await _brandService.GetBrandByIdAsync(dto.BrandId);
+                if (brand == null)
+                {
+                    return BadRequest(new { 
+                        error = "Invalid Brand", 
+                        message = $"Brand with ID '{dto.BrandId}' does not exist in the database. Please select a valid brand." 
+                    });
+                }
+
+                // Validate Model exists
+                var model = await _modelService.GetModelByIdAsync(dto.ModelId);
+                if (model == null)
+                {
+                    return BadRequest(new { 
+                        error = "Invalid Model", 
+                        message = $"Model with ID '{dto.ModelId}' does not exist in the database. Please select a valid model." 
+                    });
+                }
+
+                // Validate Model belongs to the selected Brand
+                if (model.BrandId != dto.BrandId)
+                {
+                    return BadRequest(new { 
+                        error = "Model-Brand Mismatch", 
+                        message = $"The selected model '{model.ModelName}' does not belong to the selected brand '{brand.BrandName}'. Please select a valid model for this brand." 
+                    });
+                }
+
+                var vehicle = new VehicleMaster
+                {
+                    VehicleId = Guid.NewGuid(),
+                    RegNo = dto.RegNo ?? string.Empty,
+                    ChassisNumber = dto.ChassisNumber ?? string.Empty,
+                    BrandId = dto.BrandId,
+                    ModelId = dto.ModelId,
+                    YearOfManufacture = dto.YearOfManufacture,
+                    VehicleType = dto.VehicleType,
+                    FuelType = dto.FuelType,
+                    Transmission = dto.Transmission,
+                    SeatingCapacity = dto.SeatingCapacity,
+                    VehicleColour = dto.VehicleColour,
+                    EngineNumber = dto.EngineNumber,
+                    InsurancePolicyNumber = dto.InsurancePolicyNumber,
+                    InsurancePolicyExpiryDate = dto.InsurancePolicyExpiryDate,
+                    RcExpiryDate = dto.RcExpiryDate,
+                    FitnessCertificateExpiryDate = dto.FitnessCertificateExpiryDate,
+                    IsActive = dto.IsActive,
+                    CurrentStatus = dto.CurrentStatus
+                };
+
+                // Call the SP version of Create
+                await _vehicleService.CreateSPAsync(vehicle);
+
+                _context.ActivityLogs.Add(new ActivityLog
+                {
+                    Message = $"New vehicle registered via SP: {vehicle.RegNo}",
+                    Type = "success",
+                    CreatedAt = DateTime.UtcNow
+                });
+                await _context.SaveChangesAsync();
+
+                return Ok(new { vehicleId = vehicle.VehicleId, message = "Vehicle created via Stored Procedure" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in CreateViaSP: {ex.Message}");
+                return StatusCode(500, new { error = ex.Message, innerException = ex.InnerException?.Message });
+            }
+        }
     }
 }

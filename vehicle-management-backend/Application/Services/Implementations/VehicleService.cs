@@ -31,5 +31,16 @@ namespace vehicle_management_backend.Application.Services.Implementations
         {
             await _vehicleRepository.DeleteAsync(id);
         }
+        
+        // Stored Procedure Methods
+        public async Task<IList<VehicleMaster>> GetAllSPAsync()
+        {
+            return await _vehicleRepository.GetAllViaStoredProcAsync();
+        }
+        
+        public async Task CreateSPAsync(VehicleMaster vehicle)
+        {
+            await _vehicleRepository.CreateViaStoredProcAsync(vehicle);
+        }
     }
 }

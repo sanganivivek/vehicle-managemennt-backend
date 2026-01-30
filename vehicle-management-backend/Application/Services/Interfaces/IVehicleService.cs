@@ -8,5 +8,9 @@ namespace vehicle_management_backend.Application.Services.Interfaces
         Task CreateAsync(VehicleMaster vehicle);
         Task UpdateAsync(VehicleMaster vehicle);
         Task DeleteAsync(Guid id);
+        
+        // Stored Procedure Methods
+        Task<IList<VehicleMaster>> GetAllSPAsync();
+        Task CreateSPAsync(VehicleMaster vehicle);
     }
 }

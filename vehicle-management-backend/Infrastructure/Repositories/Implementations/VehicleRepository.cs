@@ -1,3 +1,4 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using vehicle_management_backend.Core.Models;
 using vehicle_management_backend.Infrastructure.Data;
@@ -56,6 +57,49 @@ namespace vehicle_management_backend.Infrastructure.Repositories.Implementations
                 _context.Vehicles.Remove(vehicle);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        // 6. GET ALL VEHICLES VIA STORED PROCEDURE
+        public async Task<List<VehicleMaster>> GetAllViaStoredProcAsync()
+        {
+            // Note: Since the SP returns columns that map to VehicleMaster, 
+            // EF Core can map the results directly.
+            // However, .Include() (joins) won't work automatically on SP results 
+            // unless the SP returns the exact structure or you handle mapping manually.
+            return await _context.Vehicles
+                .FromSqlRaw("EXEC sp_GetAllVehicles")
+                .ToListAsync();
+        }
+
+        // 7. CREATE VEHICLE VIA STORED PROCEDURE
+        public async Task CreateViaStoredProcAsync(VehicleMaster vehicle)
+        {
+            var parameters = new[]
+            {
+                new SqlParameter("@VehicleId", vehicle.VehicleId),
+                new SqlParameter("@RegNo", vehicle.RegNo ?? (object)DBNull.Value),
+                new SqlParameter("@ChassisNumber", vehicle.ChassisNumber ?? (object)DBNull.Value),
+                new SqlParameter("@BrandId", vehicle.BrandId),
+                new SqlParameter("@ModelId", vehicle.ModelId),
+                new SqlParameter("@YearOfManufacture", vehicle.YearOfManufacture),
+                new SqlParameter("@VehicleType", (int)vehicle.VehicleType),
+                new SqlParameter("@FuelType", (int)vehicle.FuelType),
+                new SqlParameter("@Transmission", (int)vehicle.Transmission),
+                new SqlParameter("@SeatingCapacity", vehicle.SeatingCapacity),
+                new SqlParameter("@VehicleColour", vehicle.VehicleColour ?? (object)DBNull.Value),
+                new SqlParameter("@EngineNumber", vehicle.EngineNumber ?? (object)DBNull.Value),
+                new SqlParameter("@InsurancePolicyNumber", vehicle.InsurancePolicyNumber ?? (object)DBNull.Value),
+                new SqlParameter("@InsurancePolicyExpiryDate", vehicle.InsurancePolicyExpiryDate ?? (object)DBNull.Value),
+                new SqlParameter("@RcExpiryDate", vehicle.RcExpiryDate ?? (object)DBNull.Value),
+                new SqlParameter("@FitnessCertificateExpiryDate", vehicle.FitnessCertificateExpiryDate ?? (object)DBNull.Value),
+                new SqlParameter("@IsActive", vehicle.IsActive),
+                new SqlParameter("@CurrentStatus", (int)vehicle.CurrentStatus),
+                new SqlParameter("@CreatedAt", DateTime.UtcNow)
+            };
+
+            await _context.Database.ExecuteSqlRawAsync(
+                "EXEC sp_CreateVehicle @VehicleId, @RegNo, @ChassisNumber, @BrandId, @ModelId, @YearOfManufacture, @VehicleType, @FuelType, @Transmission, @SeatingCapacity, @VehicleColour, @EngineNumber, @InsurancePolicyNumber, @InsurancePolicyExpiryDate, @RcExpiryDate, @FitnessCertificateExpiryDate, @IsActive, @CurrentStatus, @CreatedAt", 
+                parameters);
         }
     }
 }
