@@ -184,8 +184,8 @@ namespace vehicle_management_backend.Controllers
                 }
                 else
                 {
-                    var vehicles = await _vehicleService.GetAllAsync();
-                    vehicle = vehicles.FirstOrDefault(v => v.RegNo == id);
+                    // Use efficient RegNo lookup instead of loading all vehicles
+                    vehicle = await _vehicleService.GetByRegNoAsync(id);
                 }
                 if (vehicle == null) return NotFound();
                 var brands = await _brandService.GetBrandsAsync();
@@ -238,8 +238,8 @@ namespace vehicle_management_backend.Controllers
                 }
                 else
                 {
-                    var vehicles = await _vehicleService.GetAllAsync();
-                    vehicle = vehicles.FirstOrDefault(v => v.RegNo == id);
+                    // Use efficient RegNo lookup instead of loading all vehicles
+                    vehicle = await _vehicleService.GetByRegNoAsync(id);
                 }
                 
                 if (vehicle == null)
@@ -335,8 +335,8 @@ namespace vehicle_management_backend.Controllers
                 }
                 else
                 {
-                    var vehicles = await _vehicleService.GetAllAsync();
-                    var vehicle = vehicles.FirstOrDefault(v => v.RegNo == id);
+                    // Use efficient RegNo lookup instead of loading all vehicles
+                    var vehicle = await _vehicleService.GetByRegNoAsync(id);
                     if (vehicle == null) return NotFound();
 
                     regNo = vehicle.RegNo; // Capture RegNo
@@ -367,14 +367,14 @@ namespace vehicle_management_backend.Controllers
         [HttpGet("dashboard")]
         public async Task<IActionResult> GetDashboardData()
         {
-            var vehicles = await _vehicleService.GetAllAsync();
+            // Use optimized dashboard statistics query
+            var (totalCount, activeCount, recentVehicles) = await _vehicleService.GetDashboardStatsAsync();
+            
             var dashboardData = new
             {
-                totalVehicles = vehicles.Count,
-                activeVehicles = vehicles.Count(v => v.IsActive),
-                recentVehicles = vehicles.OrderByDescending(v => v.VehicleId)
-                    .Take(5)
-                    .Select(v => new
+                totalVehicles = totalCount,
+                activeVehicles = activeCount,
+                recentVehicles = recentVehicles.Select(v => new
                     {
                         vehicleId = v.VehicleId,
                         regNo = v.RegNo,
@@ -382,7 +382,7 @@ namespace vehicle_management_backend.Controllers
                         modelId = v.ModelId,
                         yearOfManufacture = v.YearOfManufacture,
                         isActive = v.IsActive
-                    })
+                    }).ToList() // Materialize to List for JSON serialization
             };
             return Ok(dashboardData);
         }

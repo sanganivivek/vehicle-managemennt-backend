@@ -25,6 +25,12 @@ namespace vehicle_management_backend.Application.Services.Implementations
         {
             return await _vehicleRepository.GetByIdAsync(id);
         }
+
+        public async Task<VehicleMaster?> GetByRegNoAsync(string regNo)
+        {
+            return await _vehicleRepository.GetByRegNoAsync(regNo);
+        }
+
         public async Task CreateAsync(VehicleMaster vehicle)
         {
             await _vehicleRepository.AddAsync(vehicle);
@@ -36,6 +42,13 @@ namespace vehicle_management_backend.Application.Services.Implementations
         public async Task DeleteAsync(Guid id)
         {
             await _vehicleRepository.DeleteAsync(id);
+        }
+        
+        // Dashboard Statistics
+        public async Task<(int TotalCount, int ActiveCount, IList<VehicleMaster> RecentVehicles)> GetDashboardStatsAsync()
+        {
+            var result = await _vehicleRepository.GetDashboardStatsAsync();
+            return (result.TotalCount, result.ActiveCount, result.RecentVehicles);
         }
         
         // Stored Procedure Methods

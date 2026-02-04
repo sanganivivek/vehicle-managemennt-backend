@@ -96,6 +96,15 @@ namespace vehicle_management_backend.Infrastructure.Repositories.Implementations
                 .FirstOrDefaultAsync(v => v.VehicleId == id);
         }
 
+        // 2.1 GET VEHICLE BY REGISTRATION NUMBER
+        public async Task<VehicleMaster?> GetByRegNoAsync(string regNo)
+        {
+            return await _context.Vehicles
+                .Include(v => v.Brand)
+                .Include(v => v.Model)
+                .FirstOrDefaultAsync(v => v.RegNo == regNo);
+        }
+
         // 3. ADD (INSERT) VEHICLE
         public async Task AddAsync(VehicleMaster vehicle)
         {
@@ -119,6 +128,24 @@ namespace vehicle_management_backend.Infrastructure.Repositories.Implementations
                 _context.Vehicles.Remove(vehicle);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        // 5.1 GET DASHBOARD STATISTICS (OPTIMIZED)
+        public async Task<(int TotalCount, int ActiveCount, List<VehicleMaster> RecentVehicles)> GetDashboardStatsAsync()
+        {
+            // Use database aggregation for counts (efficient)
+            var totalCount = await _context.Vehicles.CountAsync();
+            var activeCount = await _context.Vehicles.CountAsync(v => v.IsActive);
+            
+            // Only fetch the 5 most recent vehicles
+            var recentVehicles = await _context.Vehicles
+                .Include(v => v.Brand)
+                .Include(v => v.Model)
+                .OrderByDescending(v => v.CreatedAt)
+                .Take(5)
+                .ToListAsync();
+
+            return (totalCount, activeCount, recentVehicles);
         }
 
         // 6. GET ALL VEHICLES VIA STORED PROCEDURE
