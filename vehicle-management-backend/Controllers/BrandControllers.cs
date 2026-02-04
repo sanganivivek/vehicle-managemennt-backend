@@ -23,9 +23,41 @@ namespace vehicle_management_backend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] string? search, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            return Ok(await _brandService.GetBrandsAsync());
+            try
+            {
+                var brands = await _brandService.GetBrandsAsync();
+                
+                if (!string.IsNullOrEmpty(search))
+                {
+                    brands = brands.Where(b => b.BrandName.Contains(search, StringComparison.OrdinalIgnoreCase) || 
+                                             b.BrandCode.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
+
+                var totalCount = brands.Count();
+                var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+                
+                var pagedBrands = brands
+                    .OrderByDescending(b => b.BrandName) 
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                return Ok(new
+                {
+                    totalCount,
+                    page,
+                    data = pagedBrands,
+                    totalPages,
+                    totalRecords = totalCount,
+                    pageSize
+                });
+            }
+            catch (Exception ex)
+            {
+                 return StatusCode(500, new { error = ex.Message });
+            }
         }
 
         [HttpGet("{id}")]

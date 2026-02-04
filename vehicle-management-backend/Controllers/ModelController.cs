@@ -42,27 +42,82 @@ namespace vehicle_management_backend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? search, [FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string? sortBy = null, [FromQuery] string? sortOrder = "asc")
         {
-            var models = await _modelService.GetModelsAsync();
-            var brands = await _brandService.GetBrandsAsync();
-            
-            var dtos = models.Select(m =>
+            try
             {
-                var brand = brands.FirstOrDefault(b => b.BrandId == m.BrandId);
-                return new ModelDTO
+                var models = await _modelService.GetModelsAsync();
+                var brands = await _brandService.GetBrandsAsync();
+                
+                // 1. Join Models with Brands (Models don't store BrandName directly)
+                var dtos = models.Select(m =>
                 {
-                    ModelId = m.ModelId,
-                    ModelCode = m.ModelCode,
-                    ModelName = m.ModelName,
+                    var brand = brands.FirstOrDefault(b => b.BrandId == m.BrandId);
+                    return new ModelDTO
+                    {
+                        ModelId = m.ModelId,
+                        ModelCode = m.ModelCode,
+                        ModelName = m.ModelName,
+                        Description = m.Description,
+                        BrandId = m.BrandId,
+                        BrandName = brand?.BrandName ?? "Unknown",
+                        BrandCode = brand?.BrandCode
+                    };
+                });
 
-                    Description = m.Description,
-                    BrandId = m.BrandId,
-                    BrandName = brand?.BrandName,
-                    BrandCode = brand?.BrandCode
-                };
-            });
-            return Ok(dtos);
+                // 2. Filter
+                if (!string.IsNullOrEmpty(search))
+                {
+                    dtos = dtos.Where(m => 
+                        (m.ModelName?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false) || 
+                        (m.ModelCode?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                        (m.BrandName?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false)
+                    );
+                }
+
+                // 3. Sort
+                if (!string.IsNullOrEmpty(sortBy))
+                {
+                    switch (sortBy.ToLower())
+                    {
+                        case "brandname":
+                            dtos = sortOrder?.ToLower() == "desc" ? dtos.OrderByDescending(m => m.BrandName) : dtos.OrderBy(m => m.BrandName);
+                            break;
+                        case "modelname":
+                            dtos = sortOrder?.ToLower() == "desc" ? dtos.OrderByDescending(m => m.ModelName) : dtos.OrderBy(m => m.ModelName);
+                            break;
+                        case "modelcode":
+                            dtos = sortOrder?.ToLower() == "desc" ? dtos.OrderByDescending(m => m.ModelCode) : dtos.OrderBy(m => m.ModelCode);
+                            break;
+                        default:
+                            dtos = dtos.OrderBy(m => m.ModelName);
+                            break;
+                    }
+                }
+                else
+                {
+                    dtos = dtos.OrderBy(m => m.ModelName); // Default sort
+                }
+
+                // 4. Paginate
+                var totalCount = dtos.Count();
+                var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+                var pagedData = dtos.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+                return Ok(new
+                {
+                    totalCount,
+                    page,
+                    data = pagedData,
+                    totalPages,
+                    totalRecords = totalCount,
+                    pageSize
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
         }
 
         [HttpGet("{id}")]

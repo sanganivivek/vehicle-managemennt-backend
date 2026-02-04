@@ -114,73 +114,24 @@ namespace vehicle_management_backend.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? search, [FromQuery] string? brand, [FromQuery] int? status,
-            [FromQuery] string? sortBy, [FromQuery] string? sortOrder, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetAll([FromQuery] string? search, [FromQuery] string? brand, [FromQuery] int? status, [FromQuery] string? sortBy, [FromQuery] string? sortOrder, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
-                var vehicles = await _vehicleService.GetAllAsync();
-                var brands = await _brandService.GetBrandsAsync();
-                var models = await _modelService.GetModelsAsync();
-                if (vehicles == null)
-                {
-                    vehicles = new List<VehicleMaster>();
-                }
-                if (status.HasValue)
-                {
-                    vehicles = vehicles.Where(v => v.CurrentStatus == status.Value).ToList();
-                }
-                if (!string.IsNullOrEmpty(search))
-                    vehicles = vehicles.Where(v => v.RegNo.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                                                  v.ChassisNumber.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
-                if (!string.IsNullOrEmpty(brand))
-                {
-                    var brandId = brands.FirstOrDefault(b => b.BrandName.Equals(brand, StringComparison.OrdinalIgnoreCase))?.BrandId;
-                    if (brandId.HasValue)
-                        vehicles = vehicles.Where(v => v.BrandId == brandId.Value).ToList();
-                }
-                if (!string.IsNullOrEmpty(sortBy))
-                {
-                    switch (sortBy.ToLower())
-                    {
-                        case "regno":
-                            vehicles = sortOrder?.ToLower() == "desc" ?
-                                vehicles.OrderByDescending(v => v.RegNo).ToList() :
-                                vehicles.OrderBy(v => v.RegNo).ToList();
-                            break;
-                        case "brand":
-                            vehicles = sortOrder?.ToLower() == "desc" ?
-                                vehicles.OrderByDescending(v => brands.FirstOrDefault(b => b.BrandId == v.BrandId)?.BrandName ?? "").ToList() :
-                                vehicles.OrderBy(v => brands.FirstOrDefault(b => b.BrandId == v.BrandId)?.BrandName ?? "").ToList();
-                            break;
-                        case "model":
-                            vehicles = sortOrder?.ToLower() == "desc" ?
-                                vehicles.OrderByDescending(v => models.FirstOrDefault(m => m.ModelId == v.ModelId)?.ModelName ?? "").ToList() :
-                                vehicles.OrderBy(v => models.FirstOrDefault(m => m.ModelId == v.ModelId)?.ModelName ?? "").ToList();
-                            break;
-                        default:
-                            vehicles = sortOrder?.ToLower() == "desc" ?
-                                vehicles.OrderByDescending(v => v.CreatedAt).ToList() :
-                                vehicles.OrderBy(v => v.CreatedAt).ToList();
-                            break;
-                    }
-                }
-                var totalCount = vehicles.Count();
-                var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-                vehicles = vehicles.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-                var dtos = vehicles.Select(v =>
-                {
-                    var vehicleBrand = brands.FirstOrDefault(b => b.BrandId == v.BrandId);
-                    var vehicleModel = models.FirstOrDefault(m => m.ModelId == v.ModelId);
-                    return new VehicleDTO
+               // Call Optimized Service Method
+               var (vehicles, totalCount) = await _vehicleService.GetVehiclesAsync(search, brand, status, sortBy, sortOrder, page, pageSize);
+
+               var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+               var dtos = vehicles.Select(v => new VehicleDTO
                     {
                         VehicleId = v.VehicleId,
                         RegNo = v.RegNo,
                         ChassisNumber = v.ChassisNumber,
                         BrandId = v.BrandId,
                         ModelId = v.ModelId,
-                        BrandName = vehicleBrand?.BrandName ?? "Unknown",
-                        ModelName = vehicleModel?.ModelName ?? "Unknown",
+                        BrandName = v.Brand?.BrandName ?? "Unknown",
+                        ModelName = v.Model?.ModelName ?? "Unknown",
                         VehicleType = v.VehicleType.ToString(),
                         FuelType = v.FuelType.ToString(),
                         Transmission = v.Transmission.ToString(),
@@ -194,8 +145,8 @@ namespace vehicle_management_backend.Controllers
                         FitnessCertificateExpiryDate = v.FitnessCertificateExpiryDate,
                         IsActive = v.IsActive,
                         CurrentStatus = v.CurrentStatus
-                    };
-                }).ToList();
+                    }).ToList();
+
                 return Ok(new
                 {
                     totalCount,
@@ -209,6 +160,7 @@ namespace vehicle_management_backend.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in GetAll: {ex.Message}");
+                // Return empty list on error
                 return Ok(new
                 {
                     totalCount = 0,
