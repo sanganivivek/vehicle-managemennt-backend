@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security;
+using System.ComponentModel.DataAnnotations;
+
 namespace vehicle_management_backend.Core.DTOs
 {
     public class VehicleDTO
