@@ -10,9 +10,9 @@ namespace vehicle_management_backend.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "ModelType",
-                table: "Models");
+            //migrationBuilder.DropColumn(
+            //    name: "ModelType",
+            //    table: "Models");
         }
 
         /// <inheritdoc />

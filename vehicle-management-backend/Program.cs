@@ -15,6 +15,8 @@ builder.Services.AddScoped<IBrandRespository, BrandRepository>();
 builder.Services.AddScoped<IBrandService, BrandService>();
 builder.Services.AddScoped<IModelRespository, ModelRepository>();
 builder.Services.AddScoped<IModelService, ModelService>();
+builder.Services.AddScoped<IDealerRepository, DealerRepository>();
+builder.Services.AddScoped<IDealerService, DealerService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

@@ -12,6 +12,7 @@ namespace vehicle_management_backend.Infrastructure.Data
         public DbSet<Model> Models { get; set; }
         public DbSet<VehicleMaster> Vehicles { get; set; }
         public DbSet<ActivityLog> ActivityLogs { get; set; }
+        public DbSet<Dealer> Dealers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
