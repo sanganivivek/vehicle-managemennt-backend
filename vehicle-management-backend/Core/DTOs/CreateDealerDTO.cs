@@ -5,7 +5,7 @@ namespace vehicle_management_backend.Core.DTOs
 {
     public class CreateDealerDTO
     {
-        [JsonPropertyName("dealerName")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
         [JsonPropertyName("contactPerson")]

@@ -36,7 +36,7 @@ namespace vehicle_management_backend.Application.Services.Implementations
                 GSTNo = dealerDto.GSTNo,
                 City = dealerDto.City,
                 Address = dealerDto.Address,
-                status = dealerDto.Status,
+                Status = dealerDto.Status,
                 CreatedDate = DateTime.Now
             };
 
@@ -55,7 +55,7 @@ namespace vehicle_management_backend.Application.Services.Implementations
             existingDealer.GSTNo = dealerDto.GSTNo;
             existingDealer.City = dealerDto.City;
             existingDealer.Address = dealerDto.Address;
-            existingDealer.status = dealerDto.Status;
+            existingDealer.Status = dealerDto.Status;
 
             await _dealerRepository.UpdateAsync(existingDealer);
             return existingDealer;
