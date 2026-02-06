@@ -28,7 +28,7 @@ public class VehicleServiceTests
         // --- ARRANGE (Setup data) ---
         var dummyVehicles = new List<VehicleMaster>
         {
-            // Removed VehicleName, using RegNo for verification
+            // Removed VehicleName, using RegNo instead
             new VehicleMaster { VehicleId = Guid.NewGuid(), RegNo = "GJ01AB0123" },
             new VehicleMaster { VehicleId = Guid.NewGuid(), RegNo = "GJ01AB1234" }
         };
@@ -43,7 +43,7 @@ public class VehicleServiceTests
         // --- ASSERT (Verify results) ---
         Assert.NotNull(result);
         Assert.Equal(2, result.Count);
-        // Changed assertion from VehicleName to RegNo
+        // Changed assertion to check RegNo instead of VehicleName
         Assert.Equal("GJ01AB0123", result[0].RegNo);
     }
 
@@ -52,7 +52,7 @@ public class VehicleServiceTests
     {
         // --- ARRANGE ---
         var vehicleId = Guid.NewGuid();
-        // Removed VehicleName, added RegNo to verify specific data
+        // Removed VehicleName, using RegNo instead
         var dummyVehicle = new VehicleMaster { VehicleId = vehicleId, RegNo = "GJ-TEST-01" };
 
         _mockRepo.Setup(repo => repo.GetByIdAsync(vehicleId))
@@ -64,7 +64,7 @@ public class VehicleServiceTests
         // --- ASSERT ---
         Assert.NotNull(result);
         Assert.Equal(vehicleId, result.VehicleId);
-        // Changed assertion from VehicleName to RegNo
+        // Changed assertion to check RegNo instead of VehicleName
         Assert.Equal("GJ-TEST-01", result.RegNo);
     }
 
@@ -72,7 +72,7 @@ public class VehicleServiceTests
     public async Task CreateAsync_ShouldCallAddAsyncInRepository()
     {
         // --- ARRANGE ---
-        // Removed VehicleName
+        // Removed VehicleName, using RegNo instead
         var newVehicle = new VehicleMaster { VehicleId = Guid.NewGuid(), RegNo = "GJ-NEW-01" };
 
         // --- ACT ---
