@@ -28,8 +28,9 @@ public class VehicleServiceTests
         // --- ARRANGE (Setup data) ---
         var dummyVehicles = new List<VehicleMaster>
         {
-            new VehicleMaster { VehicleId = Guid.NewGuid(), VehicleName = "Car A", RegNo = "GJ01AB0123" },
-            new VehicleMaster { VehicleId = Guid.NewGuid(), VehicleName = "Car B", RegNo = "GJ01AB1234" }
+            // Removed VehicleName, using RegNo for verification
+            new VehicleMaster { VehicleId = Guid.NewGuid(), RegNo = "GJ01AB0123" },
+            new VehicleMaster { VehicleId = Guid.NewGuid(), RegNo = "GJ01AB1234" }
         };
 
         // Tell the mock: "When GetAllAsync is called, return this list"
@@ -42,7 +43,8 @@ public class VehicleServiceTests
         // --- ASSERT (Verify results) ---
         Assert.NotNull(result);
         Assert.Equal(2, result.Count);
-        Assert.Equal("Car A", result[0].VehicleName);
+        // Changed assertion from VehicleName to RegNo
+        Assert.Equal("GJ01AB0123", result[0].RegNo);
     }
 
     [Fact]
@@ -50,7 +52,8 @@ public class VehicleServiceTests
     {
         // --- ARRANGE ---
         var vehicleId = Guid.NewGuid();
-        var dummyVehicle = new VehicleMaster { VehicleId = vehicleId, VehicleName = "Test Car" };
+        // Removed VehicleName, added RegNo to verify specific data
+        var dummyVehicle = new VehicleMaster { VehicleId = vehicleId, RegNo = "GJ-TEST-01" };
 
         _mockRepo.Setup(repo => repo.GetByIdAsync(vehicleId))
                  .ReturnsAsync(dummyVehicle);
@@ -61,14 +64,16 @@ public class VehicleServiceTests
         // --- ASSERT ---
         Assert.NotNull(result);
         Assert.Equal(vehicleId, result.VehicleId);
-        Assert.Equal("Test Car", result.VehicleName);
+        // Changed assertion from VehicleName to RegNo
+        Assert.Equal("GJ-TEST-01", result.RegNo);
     }
 
     [Fact]
     public async Task CreateAsync_ShouldCallAddAsyncInRepository()
     {
         // --- ARRANGE ---
-        var newVehicle = new VehicleMaster { VehicleId = Guid.NewGuid(), VehicleName = "New Car" };
+        // Removed VehicleName
+        var newVehicle = new VehicleMaster { VehicleId = Guid.NewGuid(), RegNo = "GJ-NEW-01" };
 
         // --- ACT ---
         await _vehicleService.CreateAsync(newVehicle);
