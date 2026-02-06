@@ -16,44 +16,58 @@ namespace vehicle_management_backend.Application.Services.Implementations
 
         public async Task<IEnumerable<Dealer>> GetAllDealersAsync()
         {
-            return await _dealerRepository.GetAllDealersAsync();
+            return await _dealerRepository.GetAllAsync();
         }
 
         public async Task<Dealer> GetDealerByIdAsync(int id)
         {
-            return await _dealerRepository.GetDealerByIdAsync(id);
+            return await _dealerRepository.GetByIdAsync(id);
         }
 
+        // FIXED: Renamed from AddDealerAsync to CreateDealerAsync to match Interface
         public async Task<Dealer> CreateDealerAsync(CreateDealerDTO dealerDto)
         {
             var dealer = new Dealer
             {
                 Name = dealerDto.Name,
-                Address = dealerDto.Address,
+                ContactPerson = dealerDto.ContactPerson,
+                ContactNo = dealerDto.ContactNo,
+                Email = dealerDto.Email,
+                GSTNo = dealerDto.GSTNo,
                 City = dealerDto.City,
-                MobileNo = dealerDto.MobileNo,
-                EmailId = dealerDto.EmailId
+                Address = dealerDto.Address,
+                status = dealerDto.Status,
+                CreatedDate = DateTime.Now
             };
-            return await _dealerRepository.AddDealerAsync(dealer);
+
+            return await _dealerRepository.AddAsync(dealer);
         }
 
         public async Task<Dealer> UpdateDealerAsync(int id, UpdateDealerDTO dealerDto)
         {
-            var existingDealer = await _dealerRepository.GetDealerByIdAsync(id);
+            var existingDealer = await _dealerRepository.GetByIdAsync(id);
             if (existingDealer == null) return null;
 
             existingDealer.Name = dealerDto.Name;
-            existingDealer.Address = dealerDto.Address;
+            existingDealer.ContactPerson = dealerDto.ContactPerson;
+            existingDealer.ContactNo = dealerDto.ContactNo;
+            existingDealer.Email = dealerDto.Email;
+            existingDealer.GSTNo = dealerDto.GSTNo;
             existingDealer.City = dealerDto.City;
-            existingDealer.MobileNo = dealerDto.MobileNo;
-            existingDealer.EmailId = dealerDto.EmailId;
+            existingDealer.Address = dealerDto.Address;
+            existingDealer.status = dealerDto.Status;
 
-            return await _dealerRepository.UpdateDealerAsync(existingDealer);
+            await _dealerRepository.UpdateAsync(existingDealer);
+            return existingDealer;
         }
 
         public async Task<bool> DeleteDealerAsync(int id)
         {
-            return await _dealerRepository.DeleteDealerAsync(id);
+            var dealer = await _dealerRepository.GetByIdAsync(id);
+            if (dealer == null) return false;
+
+            await _dealerRepository.DeleteAsync(id);
+            return true;
         }
     }
 }

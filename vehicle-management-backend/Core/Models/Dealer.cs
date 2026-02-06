@@ -10,12 +10,16 @@ namespace vehicle_management_backend.Core.Models
         [Required]
         public string Name { get; set; }
 
+        public string ContactPerson { get; set; }
+        public string ContactNo { get; set; }
+        public string Email { get; set; }
+        public string GSTNo { get; set; }
+        public string City { get; set; }
         public string Address { get; set; }
 
-        public string City { get; set; }
+        // Ensure this matches the case of the property in DealerService (I used lowercase 'status' to match your request)
+        public string status { get; set; }
 
-        public string MobileNo { get; set; }
-
-        public string EmailId { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
     }
 }

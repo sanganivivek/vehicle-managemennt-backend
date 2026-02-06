@@ -1,14 +1,32 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace vehicle_management_backend.Core.DTOs
 {
     public class CreateDealerDTO
     {
-        [Required]
+        [JsonPropertyName("dealerName")]
         public string Name { get; set; }
-        public string Address { get; set; }
+
+        [JsonPropertyName("contactPerson")]
+        public string ContactPerson { get; set; }
+
+        [JsonPropertyName("contactNo")]
+        public string ContactNo { get; set; }
+
+        [JsonPropertyName("email")]
+        public string Email { get; set; }
+
+        [JsonPropertyName("gstNo")]
+        public string GSTNo { get; set; }
+
+        [JsonPropertyName("city")]
         public string City { get; set; }
-        public string MobileNo { get; set; }
-        public string EmailId { get; set; }
+
+        [JsonPropertyName("address")]
+        public string Address { get; set; }
+
+        [JsonPropertyName("status")]
+        public string Status { get; set; } // Added field
     }
 }

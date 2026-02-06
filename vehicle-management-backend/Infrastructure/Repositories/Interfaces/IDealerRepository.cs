@@ -4,10 +4,10 @@ namespace vehicle_management_backend.Infrastructure.Repositories.Interfaces
 {
     public interface IDealerRepository
     {
-        Task<IEnumerable<Dealer>> GetAllDealersAsync();
-        Task<Dealer> GetDealerByIdAsync(int id);
-        Task<Dealer> AddDealerAsync(Dealer dealer);
-        Task<Dealer> UpdateDealerAsync(Dealer dealer);
-        Task<bool> DeleteDealerAsync(int id);
+        Task<IEnumerable<Dealer>> GetAllAsync();
+        Task<Dealer> GetByIdAsync(int id);
+        Task<Dealer> AddAsync(Dealer dealer);
+        Task UpdateAsync(Dealer dealer);
+        Task DeleteAsync(int id);
     }
 }
